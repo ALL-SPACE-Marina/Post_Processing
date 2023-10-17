@@ -124,7 +124,7 @@ for p in range(len(Th_deg_list)):
         plt.legend(loc='lower left')
         plt.title('SW: ' + acu + '\nFreq = ' + ' X' + '\nb1: Th=' + str(Th_deg_list[p]) + ', Phi=' + str(Ph_deg), fontsize=15)
         plt.tight_layout()
-        plt.savefig(r'C:\Terminal_Testing\SLC_plotting\Tx_G_vs_F-Type_all_Fq' + '\\' +  'Frequency_comparison_Th_'+ str(Th_deg_list[p]) + '_Phi_' + str(Ph_deg)+'.png', dpi=400)
+        plt.savefig(savePath + '\\' +  'Frequency_comparison_Th_'+ str(Th_deg_list[p]) + '_Phi_' + str(Ph_deg)+'.png', dpi=400)
     plt.close('all')
     
 #sb_mute = 'OFF'
