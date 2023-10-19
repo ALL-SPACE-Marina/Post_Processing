@@ -6,16 +6,31 @@ import pip
 plt.close('all')
 
 # load
-fileName = r'C:\Terminal_Testing\SLC_plotting\Tx_G_vs_F-Type_all_Fq\ppk_data'
-savePath=r'C:\Terminal_Testing\SLC_plotting\Tx_G_vs_F-Type_all_Fq'
+fileName = r'C:\Terminal_Testing\SLC_plotting\Rx_G_vs_F-Type_all_Fq\ppk_data'
+savePath=r'C:\Terminal_Testing\SLC_plotting\Rx_G_vs_F-Type_all_Fq'
 Th_deg_list=[0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0]
 Ph_deg=0.0
-cal_freq_list=[27.5, 28.0, 28.5, 29.0, 29.5, 30.0, 30.5, 31.0]
-meas_freq_list=[27.5, 28.0, 28.5, 29.0, 29.5, 30.0, 30.5, 31.0]
 
-labelLog = ['F-Type_QR00057', 'G-Type_QR00012']
-fpathLog = [r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_G-Type/Tx_TLM/Comparisons/SLC3/Multi_Fq/Raw_Data/F-Type_QR00057',
-            r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_G-Type/Tx_TLM/Comparisons/SLC3/Multi_Fq/Raw_Data/G-Type_QR00012']
+TLM_Type='Rx'
+
+if TLM_Type=='Rx':
+    cal_freq_list = [17.7, 18.2, 18.7, 19.2, 19.7, 20.2, 20.7, 21.2]
+    meas_freq_list = [17.7, 18.2, 18.7, 19.2, 19.7, 20.2, 20.7, 21.2]
+    f_min=17.2
+    f_max=21.7
+    y_min_scan=40
+    y_max_scan=90
+elif TLM_Type=='Tx':
+    cal_freq_list=[27.5, 28.0, 28.5, 29.0, 29.5, 30.0, 30.5, 31.0]
+    meas_freq_list=[27.5, 28.0, 28.5, 29.0, 29.5, 30.0, 30.5, 31.0]
+    f_min = 27.0
+    f_max = 31.5
+    y_min_scan =20
+    y_max_scan =70
+
+labelLog = ['F-Type_QR00045', 'G-Type_QR00020']
+fpathLog = [r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_G-Type/Rx_TLM/Comparison/SLC2/Multi_Fq/Raw_Data/F-Type_QR00045',
+            r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_G-Type/Rx_TLM/Comparison/SLC2/Multi_Fq/Raw_Data/G-Type_QR00020']
 
 
 dirScript = os.getcwd()
@@ -93,9 +108,9 @@ for k in range(len(cal_freq_list)):
         plot__gainVstheta(fpath, cal_freq_list[k], meas_freq_list[k])
         plt.plot(x, y, 's', markeredgecolor='k', markersize=10, label = labelLog[i])
         plt.xlabel('Theta [deg]'); plt.ylabel('Beam 1 gain [dB]\n(at req. angle)')
-        plt.yticks(np.linspace(0,100,num=51))
+        plt.yticks(np.linspace(0,100,num=21))
         plt.xticks(np.linspace(-100,100,num=21))
-        plt.xlim([-10,80]); plt.ylim([30,70]);# plt.ylim([65, 75])
+        plt.xlim([-10,80]); plt.ylim([y_min_scan,y_max_scan]);# plt.ylim([65, 75])
         plt.grid('on')
         plt.legend(loc='lower left')
         plt.title('SW: ' + acu + '\nFreq = ' + str(meas_freq_list[k]) + ' GHz' + '\nb1: Th=' + 'X' + ', Phi=' + str(Ph_deg), fontsize=15)
@@ -119,7 +134,7 @@ for p in range(len(Th_deg_list)):
         plt.xlabel('freq [GHz]'); plt.ylabel('Beam 1 gain [dB]\n(at req. angle)')
         plt.yticks(np.linspace(0,100,num=21))
         #plt.xticks(np.linspace(-100,100,num=21))
-        plt.xlim([27.0,31.5]); plt.ylim([0,70]);# plt.ylim([65, 75])
+        plt.xlim([f_min,f_max]); plt.ylim([y_min_scan,y_max_scan]);# plt.ylim([65, 75])
         plt.grid('on')
         plt.legend(loc='lower left')
         plt.title('SW: ' + acu + '\nFreq = ' + ' X' + '\nb1: Th=' + str(Th_deg_list[p]) + ', Phi=' + str(Ph_deg), fontsize=15)
