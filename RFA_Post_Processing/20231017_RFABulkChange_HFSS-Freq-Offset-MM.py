@@ -9,11 +9,13 @@ import pickle
 
 matplotlib.use('Agg')
 
-filePath = r'C:\Users\mmarinova\Downloads\TLM_SLC00045'
+filePath = r'C:\Users\mmarinova\Downloads\Test_RFC'
 
-tlmType = 'Rx'
+tlmType = 'Tx'
 normVal = 3
 multiplier= 2
+fileType='RFC_' # RFC or RFA file. The _ is needed otherwise it throws errors for the RFCs
+zeroed='True'   # put to True if you want all amplitude values to be equalized to 0. Otherwise, put False. Will work for both RFC and RFA files
 
 if normVal>=0:
     offset='HFSS_offset_'+str(normVal)+'dB_'+str(multiplier)+'sig'
@@ -31,7 +33,7 @@ elif tlmType=='Tx':
 for beamChoice in range(2):
     beam = beamChoice + 1
 
-    def find__RFAfiles(path, f_set, beam):
+    def find__RFAfiles(path, f_set, beam, fileType):
         global filesRFA
         files = []
         for root, directories, file in os.walk(path):
@@ -40,9 +42,10 @@ for beamChoice in range(2):
         			files.append(os.path.join(root,file))
         filesRFA = []
         for i in range(len(files)):
-            if 'RFA' in files[i] and 'GHz_' + str(f_set) + '0_GHz' in files[i] and 'Beam' + str(beam) in files[i]:
+            if fileType in files[i] and 'GHz_' + str(f_set) + '0_GHz' in files[i] and 'Beam' + str(beam) in files[i]:
             #if 'RFA' in files[i] and 'both_' + str(f_set) + '_GHz' in files[i] and 'Beam'+str(beam) in files[i]:
                 filesRFA.append(files[i])
+                print(files[i])
                 
     def analyse__RFAparams(filesRFA):
         global RFAparamDict, fileName
@@ -69,6 +72,7 @@ for beamChoice in range(2):
     def load__RFA(filePath):
         global meas_info, meas_array, f_measPoints
         meas_info = []
+        print(filePath)
         with open(filePath, 'r')as file:
             filecontent = csv.reader(file, delimiter=',')
             for row in filecontent:
@@ -76,13 +80,14 @@ for beamChoice in range(2):
                 header_offset = 29
             meas_info = meas_info[0:header_offset]
             meas_array = np.genfromtxt(filePath, delimiter=',', skip_header=header_offset)
+            print(np.array(meas_info[header_offset-1])[::2])
             f_measPoints = np.array(meas_info[header_offset-1])[::2].astype(float)
 
 ########## RUN ##########
 
     portFailDict = {}
     for f_set in f_set_Log:
-        find__RFAfiles(filePath, f_set, beam)
+        find__RFAfiles(filePath, f_set, beam, fileType)
         analyse__RFAparams(filesRFA)
         
         ## Collate values and find global offsets
@@ -110,14 +115,14 @@ for beamChoice in range(2):
                 if gain[k] <  medianVal-stdVal*2:
                     axs[0].plot(k,gain[k],'rX')
                     gain[k] = gain[k]*0.0
-            axs[1].set_title('RFA file (filtered)')
+            axs[1].set_title(fileType +' file (filtered)')
             axs[1].plot(gain, label = filesRFA[j].split('\\')[-1].split('_')[4])
             newGain = gain[gain != 0]
             badPortsLog.append(len(gain) - len(newGain))
             minVal = np.min(newGain); minValLog.append(minVal)
             minVal_loc = np.argmin(newGain)
-            axs[1].hlines(minVal, 0, len(gain), 'g', label = 'Min val') 
-            axs[1].plot(minVal_loc, minVal,'g^', markersize=10)     
+            axs[1].hlines(minVal, 0, len(gain), 'g', label = 'Min val')
+            axs[1].plot(minVal_loc, minVal,'g^', markersize=10)
             axs[1].legend(loc='lower right')
             correctedGain = gain-minVal+normVal
             for m in range(len(correctedGain)):
@@ -126,7 +131,7 @@ for beamChoice in range(2):
             axs[2].set_title('New RFA file')
             axs[2].plot(correctedGain, label='Shifted:' + str(round(abs(minVal-normVal),2)) + ' dB')
             axs[2].legend(loc='lower right')
-            
+
             yaxMin = -5; yaxMax = 55
             axs[0].set_ylim([yaxMin, yaxMax]); axs[0].grid()
             axs[1].set_ylim([yaxMin, yaxMax]); axs[1].grid()
@@ -135,27 +140,27 @@ for beamChoice in range(2):
             axs[1].set_xlabel('port'); axs[1].set_ylabel('dB')
             axs[2].set_xlabel('port'); axs[2].set_ylabel('dB')
         plt.tight_layout()
-        
+
         portFailDict[str(f_set)] = {}
         portFailDict[str(f_set)]['boads'] = boardLog
         portFailDict[str(f_set)]['outlier ports'] = badPortsLog
-        
+
         plt.figure()
         plt.plot(minValLog)
         plt.xlabel('board'); plt.ylabel('minVal')
-        
+
         plt.figure()
         plt.plot(stdLog)
         plt.xlabel('board'); plt.ylabel('stdVal')
         global_std = np.mean(stdLog)
         plt.hlines(global_std, 0, 18)
-        
+
         plt.figure()
         plt.plot(medianLog)
         plt.xlabel('board'); plt.ylabel('medianVal')
         global_median = np.average(medianLog) ####################was mean
         plt.hlines(global_median, 0, 18)
-        
+
         global_minVal = global_median-global_std*multiplier
         print(global_minVal)
 
@@ -171,34 +176,34 @@ for beamChoice in range(2):
             gain = meas_array[:, col]
             medianVal = np.median(gain); medianLog.append(medianVal)
             stdVal = np.std(gain); stdLog.append(stdVal)
-            axs[0].set_title('RFA file')
+            axs[0].set_title(fileType +' file')
             boardName = filesRFA[j].split('\\')[-1].split('_')[4]
             axs[0].plot(gain, label = boardName)
             axs[0].fill_between(np.linspace(0, len(gain), num=101), medianVal-stdVal*2, medianVal+stdVal*2, color='red', alpha=0.2, label='$\pm$ 2$\sigma$')
             axs[0].hlines(medianVal, 0, len(gain), 'r', label='Median')
             axs[0].hlines(global_minVal, 0, len(gain), 'k', label='Global Min Val')
             axs[0].legend(loc='lower right')
-    
+
             for k in range(len(gain)):
                 if gain[k] <  global_minVal:
                     axs[0].plot(k,gain[k],'rX')
                     gain[k] = gain[k]*0.0
-            axs[1].set_title('RFA file (filtered)')
+            axs[1].set_title(fileType+ ' file (filtered)')
             axs[1].plot(gain, label = filesRFA[j].split('\\')[-1].split('_')[4])
             newGain = gain[gain != 0]
             minVal = np.min(newGain); minValLog.append(minVal)
             minVal_loc = np.argmin(newGain)
             minVal = global_minVal
-            axs[1].hlines(minVal, 0, len(gain), 'k', label = 'Global Min Val')    
+            axs[1].hlines(minVal, 0, len(gain), 'k', label = 'Global Min Val')
             axs[1].legend(loc='lower right')
             correctedGain = gain-minVal+normVal
             for m in range(len(correctedGain)):
                 if correctedGain[m] <= normVal:
                     correctedGain[m] = normVal
-            axs[2].set_title('New RFA file')
+            axs[2].set_title('New ' +fileType + ' file')
             axs[2].plot(correctedGain, label='Shifted:' + str(round(abs(minVal-normVal),2)) + ' dB')
             axs[2].legend(loc='lower right')
-            
+
             yaxMin = -5; yaxMax = 55
             axs[0].set_ylim([yaxMin, yaxMax]); axs[0].grid()
             axs[1].set_ylim([yaxMin, yaxMax]); axs[1].grid()
@@ -223,13 +228,16 @@ for beamChoice in range(2):
             gain = gain - global_minVal+normVal
             for k in range(gain.shape[0]):
                 for l in range(gain.shape[1]):
-                    if normVal>=0:
-                        if gain[k, l] <= normVal:
-                            gain[k, l] = normVal
+                    if zeroed=='True':
+                        gain[k, l] = 0
+                    elif zeroed=='False':
+                        if normVal>=0:
+                            if gain[k, l] <= normVal:
+                                gain[k, l] = normVal
 
-                    elif normVal<0:
-                        if gain[k, l] <= 0:
-                            gain[k, l] = 0
+                        elif normVal<0:
+                            if gain[k, l] <= 0:
+                                gain[k, l] = 0
 
                         
             # merge back
