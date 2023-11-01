@@ -9,13 +9,14 @@ import pickle
 
 matplotlib.use('Agg')
 
-filePath = r'C:\Users\mmarinova\Downloads\Test_RFC'
+filePath = r'C:\Users\mmarinova\Downloads\QR00002_RFC'
 
 tlmType = 'Tx'
 normVal = 3
 multiplier= 2
-fileType='RFC_' # RFC or RFA file. The _ is needed otherwise it throws errors for the RFCs
-zeroed='True'   # put to True if you want all amplitude values to be equalized to 0. Otherwise, put False. Will work for both RFC and RFA files
+fileType='RFC_2' # RFC or RFA file. The _2 is needed otherwise it picks all csv files and throws an error
+zeroed='True'   # put to True if you want all amplitude values to be equalized to eqVal. Otherwise, put False. Will work for both RFC and RFA files
+eqVal = 3
 
 if normVal>=0:
     offset='HFSS_offset_'+str(normVal)+'dB_'+str(multiplier)+'sig'
@@ -229,7 +230,7 @@ for beamChoice in range(2):
             for k in range(gain.shape[0]):
                 for l in range(gain.shape[1]):
                     if zeroed=='True':
-                        gain[k, l] = 0
+                        gain[k, l] = eqVal
                     elif zeroed=='False':
                         if normVal>=0:
                             if gain[k, l] <= normVal:
