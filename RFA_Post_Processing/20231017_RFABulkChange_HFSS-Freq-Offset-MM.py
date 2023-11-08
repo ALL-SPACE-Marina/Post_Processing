@@ -9,13 +9,13 @@ import pickle
 
 matplotlib.use('Agg')
 
-filePath = r'C:\Users\mmarinova\Downloads\QR00002_RFC'
+filePath = r'C:\Users\mmarinova\Downloads\RX_Batch_1 - Copy\21G2'
 
-tlmType = 'Tx'
-normVal = 3
-multiplier= 2
-fileType='RFC_2' # RFC or RFA file. The _2 is needed otherwise it picks all csv files and throws an error
-zeroed='True'   # put to True if you want all amplitude values to be equalized to eqVal. Otherwise, put False. Will work for both RFC and RFA files
+tlmType = 'Rx'
+normVal = -3
+multiplier= 1
+fileType='RFA_2' # RFC or RFA file. The _2 is needed otherwise it picks all csv files and throws an error
+zeroed='False'   # put to True if you want all amplitude values to be equalized to eqVal. Otherwise, put False. Will work for both RFC and RFA files
 eqVal = 3
 
 if normVal>=0:
@@ -25,8 +25,8 @@ elif normVal<0:
 
 
 if tlmType=='Rx':
-    f_set_Log = [17.7, 18.2, 18.7, 19.2, 19.7, 20.2, 20.7] #[17.7, 18.2, 18.7, 19.2, 19.7, 20.2, 20.7, 21.2]
-    #f_set_Log = [21.2]
+    #f_set_Log = [17.7, 18.2, 18.7, 19.2, 19.7, 20.2, 20.7] #[17.7, 18.2, 18.7, 19.2, 19.7, 20.2, 20.7, 21.2]
+    f_set_Log = [21.2]
 elif tlmType=='Tx':
     f_set_Log = [27.5, 28.0, 28.5, 29.0, 29.5, 30.0, 30.5, 31.0]
     #f_set_Log = [29.5]
@@ -46,7 +46,7 @@ for beamChoice in range(2):
             if fileType in files[i] and 'GHz_' + str(f_set) + '0_GHz' in files[i] and 'Beam' + str(beam) in files[i]:
             #if 'RFA' in files[i] and 'both_' + str(f_set) + '_GHz' in files[i] and 'Beam'+str(beam) in files[i]:
                 filesRFA.append(files[i])
-                print(files[i])
+                #print(files[i])
                 
     def analyse__RFAparams(filesRFA):
         global RFAparamDict, fileName
@@ -73,7 +73,7 @@ for beamChoice in range(2):
     def load__RFA(filePath):
         global meas_info, meas_array, f_measPoints
         meas_info = []
-        print(filePath)
+        #print(filePath)
         with open(filePath, 'r')as file:
             filecontent = csv.reader(file, delimiter=',')
             for row in filecontent:
@@ -81,7 +81,7 @@ for beamChoice in range(2):
                 header_offset = 29
             meas_info = meas_info[0:header_offset]
             meas_array = np.genfromtxt(filePath, delimiter=',', skip_header=header_offset)
-            print(np.array(meas_info[header_offset-1])[::2])
+            #print(np.array(meas_info[header_offset-1])[::2])
             f_measPoints = np.array(meas_info[header_offset-1])[::2].astype(float)
 
 ########## RUN ##########

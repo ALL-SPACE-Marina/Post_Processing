@@ -6,12 +6,12 @@ import pip
 plt.close('all')
 
 # load
-fileName = r'G:\measurements\TLM_Meas\DVT_S-Type\Tx_TLM\QR00004\RHCP\B1\RF_Perform\SLC3\PP_Data\ppk_data'
-savePath=r'G:\measurements\TLM_Meas\DVT_S-Type\Tx_TLM\QR00004\RHCP\B1\RF_Perform\SLC3\PP_Data'
+fileName = r'G:\measurements\TLM_Meas\DVT_I-Type\Rx_TLM\Comparisons\SLC2\F_vs_G_vs_I\PP_Data\ppk_data'
+savePath=r'G:\measurements\TLM_Meas\DVT_I-Type\Rx_TLM\Comparisons\SLC2\F_vs_G_vs_I\PP_Data\Partial'
 Th_deg_list=[0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0]
 Ph_deg=0.0
 
-TLM_Type='Tx'
+TLM_Type='Rx'
 
 if TLM_Type=='Rx':
     cal_freq_list = [17.7, 18.2, 18.7, 19.2, 19.7, 20.2, 20.7, 21.2]
@@ -21,21 +21,26 @@ if TLM_Type=='Rx':
     y_min_scan=40
     y_max_scan=90
 elif TLM_Type=='Tx':
-    cal_freq_list=[27.5, 28.0, 28.5, 29.0, 29.5]#, 30.0, 30.5, 31.0]
-    meas_freq_list=[27.5, 28.0, 28.5, 29.0, 29.5]#, 30.0, 30.5, 31.0]
+    cal_freq_list=[27.5, 28.0, 28.5, 29.0, 29.5, 30.0, 30.5, 31.0]
+    meas_freq_list=[27.5, 28.0, 28.5, 29.0, 29.5, 30.0, 30.5, 31.0]
     f_min = 27.0
     f_max = 31.5
     y_min_scan =20
     y_max_scan =70
 
-# labelLog = ['RFC_Eq_Input', 'RFC_att0_PP', 'RFC_att0_Cal', 'RFC_att3_Cal']
-# fpathLog = [r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_G-Type_1p5/Tx_TLM/Comparisons/SLC3/RFC_att0_Cal_vs_PP/Raw_Data/Cal_RFC_att_high',
-#             r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_G-Type_1p5/Tx_TLM/Comparisons/SLC3/RFC_att0_Cal_vs_PP/Raw_Data/PP_RFC_att0',
-#             r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_G-Type_1p5/Tx_TLM/Comparisons/SLC3/RFC_att0_Cal_vs_PP/Raw_Data/Cal_RFC_att0',
-#             r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_G-Type_1p5/Tx_TLM/Comparisons/SLC3/RFC_att0_Cal_vs_PP/Raw_Data/Cal_RFC_att3']
+# labelLog = ['QR00057_F-Type', 'QR00012_G-Type', 'QR00002_G-Type', 'QR00034_G-Type_1p5', 'QR00060_G-Type_1p5']
+# fpathLog = [r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_G-Type_1p5/Tx_TLM/Comparisons/SLC3/TLM_Type_Comp_att0/Raw_Data/QR00057_F-Type',
+#             r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_G-Type_1p5/Tx_TLM/Comparisons/SLC3/TLM_Type_Comp_att0/Raw_Data/QR00012_G-Type',
+#             r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_G-Type_1p5/Tx_TLM/Comparisons/SLC3/TLM_Type_Comp_att0/Raw_Data/QR00002_G-Type',
+#             r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_G-Type_1p5/Tx_TLM/Comparisons/SLC3/TLM_Type_Comp_att0/Raw_Data/QR00034_G-Type_1p5',
+#             r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_G-Type_1p5/Tx_TLM/Comparisons/SLC3/TLM_Type_Comp_att0/Raw_Data/QR00060_G-Type_1p5']
 
-labelLog = ['S-Type']
-fpathLog = [r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_S-Type/Tx_TLM/QR00004/RHCP/B1/RF_Perform/SLC3/Raw_Data/TSW_1p17p7']
+labelLog = ['QR00045_F-Type', 'QR00020_G-Type', 'QR00081_I-Type'] #'QR00002_I-Type', 'QR00011_I-Type',
+fpathLog = [r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_I-Type/Rx_TLM/Comparisons/SLC2/F_vs_G_vs_I/Raw_Data/QR00045_F-Type',
+            r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_I-Type/Rx_TLM/Comparisons/SLC2/F_vs_G_vs_I/Raw_Data/QR00020_G-Type',
+            #r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_I-Type/Rx_TLM/Comparisons/SLC2/F_vs_G_vs_I/Raw_Data/QR00002_I-Type',
+            #r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_I-Type/Rx_TLM/Comparisons/SLC2/F_vs_G_vs_I/Raw_Data/QR00011_I-Type',
+            r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_I-Type/Rx_TLM/Comparisons/SLC2/F_vs_G_vs_I/Raw_Data/QR00081_I-Type']
 
 
 
