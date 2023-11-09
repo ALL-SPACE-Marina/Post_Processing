@@ -18,18 +18,19 @@ plt.close('all')
 dirScript = os.getcwd()
 
 # parmas
-filePath = r'C:\Users\mmarinova\Downloads\S4'
+filePath = r'C:\Users\mmarinova\Downloads\RFA-Rx_I1\21G2_post-processed\HFSS_offset_m3dB_1sig'
+savePath = r'C:\Users\mmarinova\Downloads\RFA-Rx_I1\RFA_offset'
 fileType='RFA_'
-termType='F-Type'
+termType='I-Type'
 tlmType= 'Rx'
-freqTxt='_GHz_45C'
-ymax_RFA=30
+freqTxt='0_GHz_45C'
+ymax_RFA=40
 ymax_hist=50
-xmax_hist=20
+xmax_hist=40
 if tlmType=='Rx':
-    freqList = [17.7, 18.2, 18.7, 19.2, 19.7, 20.2, 20.7, 21.2]
+    freqList = [21.2]#17.7, 18.2, 18.7, 19.2, 19.7, 20.2, 20.7, 21.2]
 elif tlmType=='Tx':
-    freqList = [27.5,28.0,28.5, 29.0, 29.5, 30.0, 30.5, 31.0]
+    freqList = [27.5, 28.0, 28.5, 29.0, 29.5, 30.0, 30.5, 31.0]
 
 
 
@@ -85,7 +86,9 @@ def plot__1D(filePath, fileString, beam, title, freqSelect, ymax_RFA,ymax_hist, 
     for measFile in measFiles:
         load__measFiles(measFile)
         fcol = np.argmin((meas_frequencies-float(meas_params['f_c']))**2)
+
         x = np.linspace(1, 1*int(len(meas_array_gain[:, fcol])/3), num = 1*int(len(meas_array_gain[:, fcol])/3))
+
         sty = ''
         if len(x) < 10:
             sty = 'o-'
@@ -130,14 +133,14 @@ def plot__1D(filePath, fileString, beam, title, freqSelect, ymax_RFA,ymax_hist, 
         axs[i,1].grid('on')
     fig.suptitle(title + ' \nfreq=' + str(meas_params['f_c']) + 'GHz, beam' + str(beam), fontsize=25)
     plt.tight_layout()
-    plt.savefig(filePath + '\\' +  title + ' beam' + str(beam) + '.png')
+    plt.savefig(savePath + '\\' +  title + ' beam' + str(beam) + '.png')
     
 
 
 ##### run #####
 for l in range(len(freqList)):
     for k in range(2):
-        plot__1D(filePath, fileType,k+1, fileType+'_'+ termType+'_'+ 'Beam' +str(k+1)+'_'+'Freq_' + str(freqList[l]), str(freqList[l])+freqTxt, ymax_RFA,ymax_hist,xmax_hist)
+        plot__1D(filePath, fileType,k+1, fileType + termType+'_'+tlmType+'_'+'Freq_' + str(freqList[l]), str(freqList[l])+freqTxt, ymax_RFA,ymax_hist,xmax_hist)
 
 # def dict__maps(txrx):
 #     global S2000_TX_RFIC_CHANNEL_MAP, S2000_TX_RFIC_PORT_MAP

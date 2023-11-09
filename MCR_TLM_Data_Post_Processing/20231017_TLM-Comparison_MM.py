@@ -14,12 +14,12 @@ from pylab import *
 plt.close('all')
 
 #filePath = r'C:\Users\mmarinova\Downloads\2023-09-01_21-43-12_MCR3_Rig1_eval_QR00003_F-Type_SM_P1Opt_CT_BC'
-filePath = r'C:\Users\mmarinova\Downloads\2023-09-26_20-05-23_MCR3_Rig2_eval_QR00002_G-type_CA12_SW1p19p101_nBC'
-filename = r'Eval_Freq_min-max_G-Type'
+filePath = r'C:\Users\mmarinova\Downloads\RX_Batch_1\21G2\2023-10-31_16-17-06_MCR4_Rig1_cal_QR440-0355-00011_21.20_45C'
+filename = r'Eval_Freq_min-max_I-Type'
 #tlmType= ['S-Type', 'F-Type_SM_GOpt_CT_nBC', 'F-Type_TM_GOpt_CT_nBC', 'F-Type_TM_P1Opt_CT_BC', 'F-Type_SM_P1Opt_CT_BC']
-tlmType= ['G-type_CA12_SW1p19p101_nBC']
-termType='G-Type'
-fqRange='Tx'
+tlmType= ['00011']
+termType='I-Type'
+fqRange='Rx'
 
 # for i in range(len(tlmType)):
 #     filename = filename + '_' + tlmType[i]
@@ -95,8 +95,6 @@ for beamChoice in range(2):
         for measFile in measFiles:
             #print(measFile)
 
-
-            chop=True
             load_measFiles(measFile)
             if float(meas_params['f_c']) == float(f_set):
                 if chop == True:
