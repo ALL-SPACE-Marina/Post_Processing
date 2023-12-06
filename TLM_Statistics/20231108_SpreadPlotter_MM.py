@@ -18,20 +18,19 @@ plt.close('all')
 dirScript = os.getcwd()
 
 # parmas
-filePath = r'C:\Users\mmarinova\Downloads\RFA-Rx_I1\21G2_post-processed\HFSS_offset_m3dB_1sig'
-savePath = r'C:\Users\mmarinova\Downloads\RFA-Rx_I1\RFA_offset'
+filePath = r'C:\Users\mmarinova\Downloads\I2_Rx_Batch_4\Rx_Batch_4_post-processed'
+savePath = r'C:\Users\mmarinova\Downloads\I2_Rx_Batch_4\Rx_Batch_4_post-processed\Plots'
 fileType='RFA_'
-termType='I-Type'
+termType='I-Type_I2'
 tlmType= 'Rx'
 freqTxt='0_GHz_45C'
-ymax_RFA=40
+ymax_RFA=60
 ymax_hist=50
-xmax_hist=40
+xmax_hist=20
 if tlmType=='Rx':
-    freqList = [21.2]#17.7, 18.2, 18.7, 19.2, 19.7, 20.2, 20.7, 21.2]
+    freqList = [19.2]#[17.7, 18.2, 18.7, 19.2, 19.7, 20.2, 20.7, 21.2]
 elif tlmType=='Tx':
-    freqList = [27.5, 28.0, 28.5, 29.0, 29.5, 30.0, 30.5, 31.0]
-
+    freqList = [29.5]#[27.5, 28.0, 28.5, 29.0, 29.5, 30.0, 30.5, 31.0]
 
 
 # definitions
@@ -79,7 +78,7 @@ def load__measFiles(filePath):
 
 def plot__1D(filePath, fileString, beam, title, freqSelect, ymax_RFA,ymax_hist, xmax_hist):
     global selection
-    find_measFiles(filePath, fileString, beam, freqSelect)
+    find_measFiles(filePath, str(fileString)+str(2), beam, freqSelect)
     fig, axs = plt.subplots(3, 2, figsize=(15, 10))
     
     count = 0
@@ -98,7 +97,7 @@ def plot__1D(filePath, fileString, beam, title, freqSelect, ymax_RFA,ymax_hist, 
         count = count + 1
     for i in range(3):
         axs[i,0].set_ylim([0,ymax_RFA])
-        axs[i,0].set_ylabel('dB (lens ' + str(i+1) + ')')            
+        axs[i,0].set_ylabel('S$_{12}$ [dB] (Lens ' + str(i+1) + ')')
         axs[i,0].set_xlabel('port')
         axs[i,0].grid('on')
         #axs[i,0].legend(loc='upper left')
@@ -129,7 +128,7 @@ def plot__1D(filePath, fileString, beam, title, freqSelect, ymax_RFA,ymax_hist, 
             axs[i,0].set_xticks(x, ['A', 'B', 'COMB'])
             axs[i,0].set_xlim([0.8, 3.2])
         axs[i,1].set_xlabel('dB (lens ' + str(i+1) + ')')
-        axs[i,1].set_ylabel('count')
+        axs[i,1].set_ylabel('Spread Lens ' + str(i+1) )
         axs[i,1].grid('on')
     fig.suptitle(title + ' \nfreq=' + str(meas_params['f_c']) + 'GHz, beam' + str(beam), fontsize=25)
     plt.tight_layout()

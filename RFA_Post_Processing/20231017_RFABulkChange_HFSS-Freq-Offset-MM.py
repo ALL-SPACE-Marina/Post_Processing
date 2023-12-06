@@ -9,10 +9,11 @@ import pickle
 
 matplotlib.use('Agg')
 
-filePath = r'C:\Users\mmarinova\Downloads\RFA-Rx_I1\21G2'
+filePath = r'C:\Users\mmarinova\Downloads\Tx_Batch_1_RFA_RFC\RFA_Files'
+#savePath = r'C:\Users\mmarinova\Downloads\RFA_Rx_I1\RFA_Files\17G7-20G7'
 
-tlmType = 'Rx'
-normVal = -3
+tlmType = 'Tx'
+normVal = 0
 multiplier= 1
 fileType='RFA_2' # RFC or RFA file. The _2 is needed otherwise it picks all csv files and throws an error
 zeroed='False'   # put to True if you want all amplitude values to be equalized to eqVal. Otherwise, put False. Will work for both RFC and RFA files
@@ -28,8 +29,9 @@ elif normVal<0:
 
 
 if tlmType=='Rx':
+    f_set_Log = [17.7, 18.2, 18.7, 19.2, 19.7, 20.2, 20.7, 21.2]
     #f_set_Log = [17.7, 18.2, 18.7, 19.2, 19.7, 20.2, 20.7] #[17.7, 18.2, 18.7, 19.2, 19.7, 20.2, 20.7, 21.2]
-    f_set_Log = [21.2]
+    #f_set_Log = [21.2]
 elif tlmType=='Tx':
     f_set_Log = [27.5, 28.0, 28.5, 29.0, 29.5, 30.0, 30.5, 31.0]
     #f_set_Log = [29.5]
