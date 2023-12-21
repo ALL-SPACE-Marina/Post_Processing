@@ -21,9 +21,9 @@ dirScript = os.getcwd()
 
 # parmas
 temperature = '45'
-tlmType = 'Rx'
-measType = 'Evaluation'  # 'Calibration' or 'Evaluation'
-filePath = r'C:\Users\mmarinova\Downloads\I2_Rx_TLM_Eval'
+tlmType = 'Tx'
+measType = 'Calibration'  # 'Calibration' or 'Evaluation'
+filePath = r'C:\Users\mmarinova\Downloads\HFSS_Mod_Rx\Offset_65'
 SaveFileName = '\Post_Processed_Data'#_RFA'
 BoardFont = '6'
 counter = 0
@@ -31,8 +31,8 @@ mask_lim_variable = []
 external_folder_name = "Figures\\StressTest\\MCR1_Rig1"
 measFileShift = 0
 droppedThresh = 9
-offset=74 #value with which to offset the HFSS mask due to active gain in the syste, and SGH calibration (account for 5dB additional attenuation in calibration sequence)
-offset_mask=0 #additional offset on case of higher gain
+offset=76 #value with which to offset the HFSS mask due to active gain in the syste, and SGH calibration (account for 5dB additional attenuation in calibration sequence)
+offset_mask=3 #additional offset on case of higher gain
 Exempt_Folder = 'combiner'
 
 # frequencies to iterate through
@@ -44,13 +44,13 @@ if measType == 'Evaluation' and tlmType == 'Tx':
     f_set_list = [29.5]
     droppedThreshList = [droppedThresh]
 elif measType == 'Calibration' and tlmType == 'Tx':
-    f_set_list = [29.5]#[27.5, 28.0, 28.5, 29.0, 29.5, 30.0, 30.5, 31.0]
+    f_set_list = [27.5, 28.0, 28.5, 29.0, 29.5, 30.0, 30.5, 31.0]
     droppedThreshList = [10, 10, 0, 7, 7, 7, 7, 0]
 elif measType == 'Evaluation' and tlmType == 'Rx':
     f_set_list = [19.2]
     droppedThreshList = [droppedThresh]
 elif measType == 'Calibration' and tlmType == 'Rx':
-    f_set_list = [19.2]#[17.70, 18.20, 18.70, 19.20, 19.70, 20.20, 20.70, 21.20]
+    f_set_list = [17.70, 18.20, 18.70, 19.20, 19.70, 20.20, 20.70, 21.20]
     droppedThreshList = [25, 10, 15, 35, 35, 12, 12, 5]
 if measType == 'Calibration' and tlmType == 'Tx':
     mask = os.path.join(dirScript,r'2023_06_07_Sweep_Discrete_7pts_calibration_data_ES2_TX_TLM_Lens1_cal_equ_FR_Norm_renormalization_of_ports.csv')
@@ -144,7 +144,10 @@ def plot__gainVport(f_set, measType):
 
         # stats
         stat_TLM_median = np.median(y)
+        print('Here')
+        print(stat_TLM_median)
         stat_TLM_median_log.append(stat_TLM_median)
+        print(stat_TLM_median_log)
         stat_l1_median = np.median(y[0:int(len(y) / 3)])
         stat_l2_median = np.median(y[int(len(y) / 3):2 * int(len(y) / 3)])
         stat_l3_median = np.median(y[2 * int(len(y) / 3):3 * int(len(y) / 3)])
@@ -280,7 +283,7 @@ for p in range(2):
                     plot__gainVport(f_set, measType)
                     # colate
                     if loaded == True:
-                        stat_TLM_median_log.append(stat_TLM_median)
+                        #stat_TLM_median_log.append(stat_TLM_median)
                         y_gain_log.append(y_gain)
                         tlm_log.append(meas_params['barcodes'])
 
@@ -310,6 +313,7 @@ for p in range(2):
 
         # print(measFiles)
         axs[2, 0].hist(np.array(stat_TLM_median_log), bins=11)
+        print(len(stat_TLM_median_log))
         axs[2, 0].set_xlabel('TLM median [dB]')
         axs[2, 0].set_ylabel('count')
         axs[2, 0].set_xlim([mean - 5, mean + 5])
@@ -331,6 +335,7 @@ for p in range(2):
         if not os.path.exists(newPath):
             os.makedirs(newPath)
         plt.savefig(newPath + '/' + fileName, dpi=200)
+    plt.close('all')
 
 external_path = os.path.join(filePath, external_folder_name)
 os.makedirs(external_path, exist_ok=True)  # The path of the external folder

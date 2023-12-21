@@ -18,19 +18,19 @@ plt.close('all')
 dirScript = os.getcwd()
 
 # parmas
-filePath = r'C:\Users\mmarinova\Downloads\I2_Rx_Batch_4\Rx_Batch_4_post-processed'
-savePath = r'C:\Users\mmarinova\Downloads\I2_Rx_Batch_4\Rx_Batch_4_post-processed\Plots'
+filePath = r'C:\Users\mmarinova\Downloads\HFSS_Mod_Rx\Offset_65'
+savePath = r'C:\Users\mmarinova\Downloads\HFSS_Mod_Rx\Offset_65_Plots'
 fileType='RFA_'
-termType='I-Type_I2'
+termType='I-Type_Test'
 tlmType= 'Rx'
 freqTxt='0_GHz_45C'
 ymax_RFA=60
 ymax_hist=50
 xmax_hist=20
 if tlmType=='Rx':
-    freqList = [19.2]#[17.7, 18.2, 18.7, 19.2, 19.7, 20.2, 20.7, 21.2]
+    freqList = [17.7, 18.2, 18.7, 19.2, 19.7, 20.2, 20.7, 21.2]
 elif tlmType=='Tx':
-    freqList = [29.5]#[27.5, 28.0, 28.5, 29.0, 29.5, 30.0, 30.5, 31.0]
+    freqList = [27.5, 28.0, 28.5, 29.0, 29.5, 30.0, 30.5, 31.0]
 
 
 # definitions
