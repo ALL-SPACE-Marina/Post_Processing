@@ -14,10 +14,10 @@ from pylab import *
 plt.close('all')
 
 #filePath = r'C:\Users\mmarinova\Downloads\2023-09-01_21-43-12_MCR3_Rig1_eval_QR00003_F-Type_SM_P1Opt_CT_BC'
-filePath = r'C:\Users\mmarinova\Downloads\RX_Batch_1\21G2\2023-10-31_16-17-06_MCR4_Rig1_cal_QR440-0355-00011_21.20_45C'
-filename = r'Eval_Freq_min-max_I-Type'
+filePath = r'C:\Users\mmarinova\Downloads\Evaluation'
+filename = r'Eval_Freq_Rx_v3_vs_v4'
 #tlmType= ['S-Type', 'F-Type_SM_GOpt_CT_nBC', 'F-Type_TM_GOpt_CT_nBC', 'F-Type_TM_P1Opt_CT_BC', 'F-Type_SM_P1Opt_CT_BC']
-tlmType= ['00011']
+tlmType= ['QR420-0267-00006', 'QR420-0254-00338']
 termType='I-Type'
 fqRange='Rx'
 
@@ -39,7 +39,7 @@ elif fqRange=='Tx':
     plotYlimMin = -20
     plotYlimMax = 30
 
-chop = False
+chop = True
 # file path
 dirScript = os.getcwd()
 # definitions
@@ -115,7 +115,7 @@ for beamChoice in range(2):
                 #     plt.plot(meas_frequencies[locLeft:locRight+1], np.median(meas_array_gain, axis=0)[locLeft:locRight+1], color = colMap[count], linestyle = '--', linewidth = 5, label = str(f_set) + ' GHz')
                 plt.plot(meas_frequencies[locLeft:locRight+1], np.median(meas_array_gain, axis=0)[locLeft:locRight+1], linewidth = 5, label = str(f_set))
                 count = count + 1
-                plt.fill_between(meas_frequencies[locLeft:locRight+1], np.min(meas_array_gain, axis=0)[locLeft:locRight+1], np.max(meas_array_gain, axis=0)[locLeft:locRight+1], alpha=0.2)#, label = '\n Port min/max')
+                #plt.fill_between(meas_frequencies[locLeft:locRight+1], np.min(meas_array_gain, axis=0)[locLeft:locRight+1], np.max(meas_array_gain, axis=0)[locLeft:locRight+1], alpha=0.2)#, label = '\n Port min/max')
                 temp = meas_array_gain*1.0
                 #plt.legend(loc='lower right')
                 plt.legend(ncol=2, loc='lower right', fontsize=12)

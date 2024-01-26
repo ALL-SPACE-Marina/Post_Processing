@@ -16,14 +16,14 @@ from pylab import *
 
 plt.close('all')
 
-filePath = r'C:\Terminal_Testing\G-Type_Test\F-Type_to_G-Type\F-Type' #Location of data
-filename = r'Eval_Freq_min-max_F-Type' #Filename for the putput plots
-tlmType = ['G-type_nBC', 'G-type_BC', 'F-Type', 'G-type_FBC']
-plotTitle='G-Type vs F-Type'
-termType = 'F-Type'
-fqRange = 'Tx'
+filePath = r'C:\Users\mmarinova\Downloads\Evaluation' #Location of data
+filename = r'Eval_Freq_Rx_v3_vs_v4' #Filename for the putput plots
+tlmType = ['00005', '00006', '00338_I-Type']
+plotTitle='Rx v3 vs Rx v4'
+termType = 'I-Type'
+fqRange = 'Rx'
 chop = True
-pltMinMax=True
+pltMinMax=False
 line='One'
 mark='o'
 
@@ -149,7 +149,7 @@ for beamChoice in range(2):
                         else:
                             plt.plot(meas_frequencies[locLeft:locRight + 1],
                                      np.median(meas_array_gain, axis=0)[locLeft:locRight + 1], color=colMap[count],
-                                     linewidth=5, label=plotLabel)
+                                     linewidth=5, label=plotLabel+str(tlmType[i]))
 
 
                         if pltMinMax==True:
@@ -159,7 +159,7 @@ for beamChoice in range(2):
                                          alpha=0.2)  # , label = '\n Port min/max')
 
                         temp = meas_array_gain * 1.0
-                        plt.legend(ncol=2, loc='lower right', fontsize=12)
+                        plt.legend(ncol=3, loc='lower right', fontsize=8)
         count = count + 1
         if line == 'None' and pltMinMax == False:
             plt.xlabel('Port Number');
