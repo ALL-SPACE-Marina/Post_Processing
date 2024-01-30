@@ -6,13 +6,16 @@ import pip
 plt.close('all')
 
 # load
-fileName = r'G:\measurements\TLM_Meas\DVT_I-Type\Tx_TLM\QR00239\RHCP\B1\Cal_Investigation\SLC3\PP_Data\ppk_data'
-savePath=r'G:\measurements\TLM_Meas\DVT_I-Type\Tx_TLM\QR00239\RHCP\B1\Cal_Investigation\SLC3\PP_Data'
+#fileName = r'G:\measurements\TLM_Meas\DVT_I-Type\Tx_TLM\QR00239\RHCP\B1\Cal_Investigation\SLC3\PP_Data\ppk_data'
+fileName = r'C:\Terminal_Testing\Plots\ppk_data'
+savePath=r'C:\Terminal_Testing\Plots'
 Th_deg_list=[0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 55.0, 60.0, 65.0, 70.0]
 Ph_deg=[0.0]#, 14.4, 28.8, 43.2, 57.6, 72.0, 86.4]
+meas_3D='False'
 
 TLM_Type='Tx'
 Pol='RHCP'
+meas_Type='TLM'
 
 if TLM_Type=='Rx':
     cal_freq_list = [17.7, 18.2, 18.7, 19.2, 19.7, 20.2, 20.7, 21.2]
@@ -32,6 +35,25 @@ elif TLM_Type=='Tx':
     y_max_scan =80
     y_min_scan_xpd = 0
     y_max_scan_xpd = 30
+
+if meas_Type=='TLM':
+    lens_enab=['l1e_l2e_l3e']
+    plot_title=['TLM']
+elif meas_Type=='Single Lens':
+    lens_enab=['l1e_l2d_l3d', 'l1d_l2e_l3d', 'l1d_l2d_l3d']
+    plot_title = ['L1', 'L2', 'L3']
+elif meas_Type=='TLM and Single Lens':
+    lens_enab=['l1e_l2e_l3e', 'l1e_l2d_l3d', 'l1d_l2e_l3d', 'l1d_l2d_l3d']
+    plot_title = ['TLM', 'L1', 'L2', 'L3']
+elif meas_Type=='Lens 1':
+    lens_enab='l1e_l2d_l3d'
+    plot_title = ['L1']
+elif meas_Type=='Lens 2':
+    lens_enab='l1d_l2e_l3d'
+    plot_title = ['L2']
+elif meas_Type=='Lens 3':
+    lens_enab='l1d_l2d_l3d'
+    plot_title = ['L3']
 
 # labelLog = ['QR00057_F-Type', 'QR00012_G-Type', 'QR00002_G-Type', 'QR00034_G-Type_1p5', 'QR00060_G-Type_1p5']
 # fpathLog = [r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_G-Type_1p5/Tx_TLM/Comparisons/SLC3/TLM_Type_Comp_att0/Raw_Data/QR00057_F-Type',
@@ -66,203 +88,284 @@ colourMap = [['b','orange','g','r','purple','brown','magenta','grey'],
 
 ## Defs ##
 
-def thetaphi_to_azel(theta, phi):
-    global az, el
-    
-    theta = theta*np.pi/180.0
-    phi = phi*np.pi/180.0
-    
-    sin_el = np.sin(phi) * np.sin(theta)
-    tan_az = np.cos(phi) * np.tan(theta)
-    el = np.arcsin(sin_el) * 180.0/np.pi
-    az = np.arctan(tan_az) * 180.0/np.pi
-     
-    return az
+def plot__paramVsScan(df, fpath, cal_freq, meas_freq, phi_deg, lens_enable):
 
-def plot__gainVstheta(fpath, cal_freq, meas_freq, phi_deg):
-    global dfPlot, df, x, y, columns, acu, xpd_theta
+    global dfPlot, x_scan_request, y_scan_request, xpd_scan_request, acu, phi_scan_mispoint, th_scan_mispoint
 
-    # load
-    dirScript = os.getcwd()
-    os.chdir(dirScript)
-    df = pd.read_excel(fileName + ".xlsx")
-    columns = df.columns.tolist()
+    # extracts information from the ppk file and calculates gain, XP, XPD and mispoint in theta and phi with respect to the requested pointing angle. The parameters are extracted for plots vs scan
 
-    #reduce
+    # reduce the dataframe size based on the available parameters for plotting vs frequency
 
-    df = df[(df["phi_deg"] == phi_deg)]
+    df = df[(df["pa_phi_deg"] == phi_deg)]
     df = df[(df["cal_freq_GHz"] == cal_freq)]
     df = df[(df["freq_GHz"] == meas_freq)]
-    df = df[(df["entry_type"] == 'gain_at_requested_angle')]
     df = df[(df["fpath_parent"] == fpath)]
-    df = df[(df["lens_enabled"] == 'l1e_l2e_l3e')]
+    df = df[(df["lens_enabled"] == lens_enable)]
     acu=np.array(df['acu_version'])[0]
-    print(acu)
 
-    x = np.array(df['theta_deg'])
-    y = np.array(df['Gain_dB'])
-    xpd_theta=np.array(df['xpd_dB'])
+    df_peak = df[(df["entry_type"] == 'gain_at_peak')]
+    df_request = df[(df["entry_type"] == 'gain_at_requested_angle')]
 
-def plot__gainVsfreq(fpath,Th_deg,Ph_degree):
-    global dfPlot, df, x, y, columns, phi_meas_freq, xpd_freq
+    x_scan_request = np.array(df_request['theta_deg'])
+    y_scan_request = np.array(df_request['Gain_dB'])
+    xpd_scan_request=np.array(df_request['xpd_dB'])
 
-    # load
-    dirScript = os.getcwd()
-    os.chdir(dirScript)
-    df = pd.read_excel(fileName + ".xlsx")
-    columns = df.columns.tolist()
+    th_request = np.array(df_request['theta_deg'])
+    th_peak = np.array(df_peak['theta_deg'])
 
-    #reduce
-    # df = df[(df["pb_theta_deg"] == b1_theta)]
-    df = df[(df["phi_deg"] == Ph_degree)]
-    # df = df[(df["sb_mute"] == sb_mute)]
-    df = df[(df["theta_deg"] == Th_deg)]
-    df = df[(df["freq_GHz"] == df["cal_freq_GHz"])]
-    df = df[(df["entry_type"] == 'gain_at_requested_angle')]
-    df = df[(df["fpath_parent"] == fpath)]
+    ph_peak = np.array(df_peak['phi_deg'])
+    ph_request = np.array(df_request['phi_deg'])
 
-    phi_meas_freq = np.array(df['pa_phi_deg'])
-    x = np.array(df['freq_GHz'])
-    y = np.array(df['Gain_dB'])
-    xpd_freq=np.array(df['xpd_dB'])
+    phi_scan_mispoint = ph_peak - ph_request
+    th_scan_mispoint = th_peak - th_request
 
 
-def plot__mispointVsfreq(fpath,Th_deg,Ph_degree):
-    global dfPlot, df, x, columns, phi_meas_freq, phi_mispoint, th_mispoint,acu
+def plot__paramVsfreq(df, fpath,Th_deg,Ph_degree, lens_enable):
+    global dfPlot, x_fq_request, y_fq_request, phi_meas_freq, xpd_freq_request, acu, phi_fq_mispoint, th_fq_mispoint
 
-    # load
-    dirScript = os.getcwd()
-    os.chdir(dirScript)
-    df = pd.read_excel(fileName + ".xlsx")
-    columns = df.columns.tolist()
+    #extracts information from the ppk file and calculates gain, XP, XPD and mispoint in theta and phi with respect to the requested pointing angle. The parameters are extracted for plots vs frequency
 
-    #reduce
+    #reduce the dataframe size based on the available parameters for plotting vs frequency
     df = df[(df["pa_phi_deg"] == Ph_degree)]
     df = df[(df["pa_theta_deg"] == Th_deg)]
     df = df[(df["freq_GHz"] == df["cal_freq_GHz"])]
+    df = df[(df["lens_enabled"] == lens_enable)]
     df = df[(df["fpath_parent"] == fpath)]
-    df_request = df[(df["entry_type"] == 'gain_at_requested_angle')]
-    df_peak = df[(df["entry_type"] == 'gain_at_peak')]
     acu = np.array(df['acu_version'])[0]
 
-    th_request=np.array(df_request['theta_deg'])
+    df_peak = df[(df["entry_type"] == 'gain_at_peak')]
+    df_request = df[(df["entry_type"] == 'gain_at_requested_angle')]
+
+    th_request = np.array(df_request['theta_deg'])
     th_peak = np.array(df_peak['theta_deg'])
-    ph_request= np.array(df_request['phi_deg'])
+
     ph_peak = np.array(df_peak['phi_deg'])
-    phi_mispoint= ph_peak-ph_request
-    th_mispoint= th_peak-th_request
-    x = np.array(df_request['freq_GHz'])
+    ph_request = np.array(df_request['phi_deg'])
+
+    phi_fq_mispoint = ph_peak - ph_request
+    th_fq_mispoint = th_peak - th_request
+
     phi_meas_freq = np.array(df_request['pa_phi_deg'])
+    x_fq_request = np.array(df_request['freq_GHz'])
+    y_fq_request = np.array(df_request['Gain_dB'])
+    xpd_freq_request = np.array(df_request['xpd_dB'])
 
 
+# load
+dirScript = os.getcwd()
+os.chdir(dirScript)
+df = pd.read_excel(fileName + ".xlsx")
+columns = df.columns.tolist()
+
+for m in range(len(lens_enab)):
+
+    for k in range(len(cal_freq_list)):
 
 
+        for l in range(len(Ph_deg)):
+            # create figures
+            fig1 = plt.figure(figsize=([7, 6]))
+            ax1 = fig1.add_subplot(1, 1, 1)
 
-# for k in range(len(cal_freq_list)):
-#
-#
-#     for l in range(len(Ph_deg)):
-#         plt.figure(figsize=([7, 6]))
-#         for i in range(len(fpathLog)):
-#             Ph_degree=Ph_deg[l]
-#             print(Ph_degree)
-#
-#             fpath = fpathLog[i]
-#             plot__gainVstheta(fpath, cal_freq_list[k], meas_freq_list[k], Ph_degree)
-#             plt.plot(x, y, markerList[i], markerfacecolor= colourMap[0][i], markeredgecolor='k', markersize=10, label='Gain ' + labelLog[i])
-#             plt.plot(x, y-xpd_theta, markerList[i], markerfacecolor= colourMap[2][i], markeredgecolor='k', markersize=10, label='XP ' + labelLog[i])
-#             plt.xlabel('Theta, [deg]', fontsize=10);
-#             plt.ylabel('Gain & XP, [dB]\n(at req. angle)', fontsize=10)
-#             plt.yticks(np.linspace(0, 100, num=21), fontsize=10)
-#             plt.xticks(np.linspace(-100, 100, num=21), fontsize=10)
-#             plt.xlim([-10, 80]);
-#             plt.ylim([y_min_scan, y_max_scan]);  # plt.ylim([65, 75])
-#             plt.grid('on')
-#             plt.legend(loc='lower left', fontsize=10)
-#             plt.title(
-#                 Pol +' Gain & XP L3'+'\nSW: ' + acu + '\nFreq = ' + str(meas_freq_list[k]) + ' GHz' + '\nTh=' + 'X' + ', Phi=' + str(Ph_degree),
-#                 fontsize=15)
-#             plt.tight_layout()
-#             plt.savefig(
-#                 savePath + '\\' + 'Gain_XP_Pointing_angle_Phi_' + str(Ph_degree) + 'Freq_' + str(meas_freq_list[k]) + 'GHz.png',
-#                 dpi=400)
-#         plt.close('all')
+            fig2 = plt.figure(figsize=([7, 6]))
+            ax2 = fig2.add_subplot(1, 1, 1)
+
+            fig3 = plt.figure(figsize=([7, 6]))
+            ax3 = fig3.add_subplot(1, 1, 1)
+
+            if meas_3D == 'True':
+                fig4 = plt.figure(figsize=([7, 6]))
+                ax4 = fig4.add_subplot(1, 1, 1)
+
+            for i in range(len(fpathLog)):
+                Ph_degree=Ph_deg[l]
+                fpath = fpathLog[i]
+                plot__paramVsScan(df, fpath, cal_freq_list[k], meas_freq_list[k], Ph_degree, lens_enab[m])
+
+                # Plot Gain & XP
+                ax1.plot(x_scan_request, y_scan_request, markerList[i], markerfacecolor= colourMap[0][i], markeredgecolor='k', markersize=10, label='Gain ' + labelLog[i])
+                ax1.plot(x_scan_request, y_scan_request-xpd_scan_request, markerList[i], markerfacecolor= colourMap[2][i], markeredgecolor='k', markersize=10, label='XP ' + labelLog[i])
+                ax1.set_xlabel('Theta, [deg]', fontsize=10);
+                ax1.set_ylabel('Gain & XP, [dB]\n(at req. angle)', fontsize=10)
+                yticks_param = np.linspace(0, 100, num=21)
+                ax1.set_yticks(yticks_param)
+                ax1.tick_params(axis='y', labelsize=10)
+                ax1.tick_params(axis='x', labelsize=10)
+                ax1.set_xlim([-10, 80]);
+                ax1.set_ylim([y_min_scan, y_max_scan])
+                ax1.grid('on')
+                ax1.legend(loc='lower left', fontsize=10)
+                ax1.set_title(
+                    str(plot_title[m]) + ' ' + Pol + ' Gain & XP'+'\nSW: ' + acu + '\nFreq = ' + str(meas_freq_list[k]) + ' GHz' + '\nTh=' + 'X' + ', Phi=' + str(Ph_degree),
+                    fontsize=15)
+                fig1.tight_layout()
+                fig1.savefig(
+                    savePath + '\\' + plot_title[m] + '_Gain_XP_vs_scan_Phi_' + str(Ph_degree) + 'Freq_' + str(meas_freq_list[k]) + 'GHz.png',
+                    dpi=400)
+
+                #Plot Theta Mispoint
+                ax2.plot(x_scan_request, th_scan_mispoint, markerList[i], markerfacecolor=colourMap[0][i],
+                         markeredgecolor='k', markersize=10, label='Gain ' + labelLog[i])
+                ax2.set_xlabel('Theta, [deg]', fontsize=10);
+                ax2.set_ylabel('Theta Pointing Error, [deg]', fontsize=10)
+                yticks_param2 = np.linspace(-10, 10, num=21)
+                ax2.set_yticks(yticks_param2)
+                ax2.tick_params(axis='y', labelsize=10)
+                ax2.tick_params(axis='x', labelsize=10)
+                ax2.set_xlim([-10, 80]);
+                ax2.set_ylim([-10, 10]);
+                ax2.grid('on')
+                ax2.legend(loc='lower left', fontsize=10)
+                ax2.set_title(str(
+                    plot_title[m]) + ' ' + Pol + ' Theta Mispoint \nSW: ' + acu + '\nFreq = ' + str(meas_freq_list[k]) + ' GHz' + '\nTh=' + 'X' + ', Phi=' + str(Ph_degree), fontsize=15)
+                fig2.tight_layout()
+                fig2.savefig(savePath + '\\' + str(plot_title[m]) + '_Theta_Mispoint_vs_Scan_Ph_' + str(Ph_degree) + 'Freq_' + str(meas_freq_list[k]) + 'GHz.png', dpi=400)
+
+                # Plot XPD
+                ax3.plot(x_scan_request, xpd_scan_request, markerList[i], markerfacecolor=colourMap[0][i],
+                         markeredgecolor='k', markersize=10, label='XPD ' + labelLog[i])
+                ax3.set_xlabel('Theta, [deg]', fontsize=10);
+                ax3.set_ylabel('XPD, [dB]\n(at req. angle)', fontsize=10)
+                yticks_param3 = np.linspace(0, 100, num=21)
+                ax3.set_yticks(yticks_param3)
+                ax3.tick_params(axis='y', labelsize=10)
+                ax3.tick_params(axis='x', labelsize=10)
+                ax3.set_xlim([-10, 80]);
+                ax3.set_ylim([0, 30]);
+                ax3.grid('on')
+                ax3.legend(loc='lower left', fontsize=10)
+                ax3.set_title(
+                    str(plot_title[m]) + ' ' + Pol + ' XPD' + '\nSW: ' + acu + '\nFreq = ' + str(
+                        meas_freq_list[k]) + ' GHz' + '\nTh=' + 'X' + ', Phi=' + str(Ph_degree),
+                    fontsize=15)
+                fig1.tight_layout()
+                fig1.savefig(
+                    savePath + '\\' + plot_title[m] + '_XPD_vs_scan_Phi_' + str(Ph_degree) + 'Freq_' + str(
+                        meas_freq_list[k]) + 'GHz.png',
+                    dpi=400)
+
+                # Plot Phi Mispoint
+                if meas_3D=='True':
+
+                    ax4.plot(x_scan_request, phi_scan_mispoint, markerList[i], markerfacecolor=colourMap[0][i],
+                             markeredgecolor='k', markersize=10, label='Gain ' + labelLog[i])
+                    ax4.set_xlabel('Theta, [deg]', fontsize=10);
+                    ax4.set_ylabel('Phi Pointing Error, [deg]', fontsize=10)
+                    yticks_param4 = np.linspace(-10, 10, num=21)
+                    ax4.set_yticks(yticks_param4)
+                    ax4.tick_params(axis='y', labelsize=10)
+                    ax4.tick_params(axis='x', labelsize=10)
+                    ax4.set_xlim([-10, 80]);
+                    ax4.set_ylim([-10, 10]);
+                    ax4.grid('on')
+                    ax4.legend(loc='lower left', fontsize=10)
+                    ax4.set_title(str(
+                        plot_title[m]) + ' ' + Pol + ' Phi Mispoint \nSW: ' + acu + '\nFreq = ' + str(
+                        meas_freq_list[k]) + ' GHz' + '\nTh=' + 'X' + ', Phi=' + str(Ph_degree), fontsize=15)
+                    fig4.tight_layout()
+                    fig4.savefig(savePath + '\\' + str(plot_title[m]) + '_Phi_Mispoint_vs_Scan_Ph_' + str(
+                        Ph_degree) + 'Freq_' + str(meas_freq_list[k]) + 'GHz.png', dpi=400)
+
+            plt.close('all')
 
 
+    for p in range(len(Th_deg_list)):
+
+        for l in range(len(Ph_deg)):
+
+            #create figures
+            fig1=plt.figure(figsize=([7, 6]))
+            ax1=fig1.add_subplot(1,1,1)
+
+            fig2 = plt.figure(figsize=([7, 6]))
+            ax2 = fig2.add_subplot(1, 1, 1)
+
+            fig3 = plt.figure(figsize=([7, 6]))
+            ax3 = fig3.add_subplot(1, 1, 1)
+
+            if meas_3D=='True':
+                fig4 = plt.figure(figsize=([7, 6]))
+                ax4 = fig4.add_subplot(1, 1, 1)
+
+            for i in range(len(fpathLog)):
+                Ph_degree=Ph_deg[l]
+                fpath = fpathLog[i]
+                plot__paramVsfreq(df, fpath, Th_deg_list[p], Ph_degree, lens_enab[m])
+
+                #plot Gain and XP
+                ax1.plot(x_fq_request, y_fq_request, markerList[i], markerfacecolor= colourMap[0][i], markeredgecolor='k', markersize=10, label='Gain ' + labelLog[i])
+                ax1.plot(x_fq_request, y_fq_request - xpd_freq_request, markerList[i], markerfacecolor=colourMap[2][i], markeredgecolor='k', markersize=10, label='XP ' + labelLog[i])
+                ax1.set_xlabel('Frequency, [GHz]', fontsize=10);
+                ax1.set_ylabel('Gain & XP, [dB]\n(at req. angle)', fontsize=10)
+                yticks_param=np.linspace(0,100,num=21)
+                ax1.set_yticks(yticks_param)
+                ax1.tick_params(axis='y', labelsize=10)
+                ax1.tick_params(axis='x', labelsize=10)
+                ax1.set_xlim([f_min,f_max]);
+                ax1.set_ylim([y_min_scan,y_max_scan]);# plt.ylim([65, 75])
+                ax1.grid('on')
+                ax1.legend(loc='lower left', fontsize=10)
+                ax1.set_title(str(plot_title[m]) + ' ' + Pol + 'Gain & XP \nSW: ' + acu + '\nFreq = ' + ' X' + '\nTh=' + str(Th_deg_list[p]) + ', Phi=' + str(Ph_degree), fontsize=15)
+                fig1.tight_layout()
+                fig1.savefig(savePath + '\\' + str(plot_title[m]) + '_Gain_XP_vs_Frequency_Th_'+ str(Th_deg_list[p]) + '_Phi_' + str(Ph_degree)+'.png', dpi=400)
 
 
+                #Plot Theta Mispoint
+                ax2.plot(x_fq_request, th_fq_mispoint, markerList[i], markerfacecolor= colourMap[0][i], markeredgecolor='k', markersize=10, label='Gain ' + labelLog[i])
+                ax2.set_xlabel('Frequency, [GHz]', fontsize=10);
+                ax2.set_ylabel('Pointing Error, [deg]', fontsize=10)
+                yticks_param2 = np.linspace(-10, 10, num=21)
+                ax2.set_yticks(yticks_param2)
+                ax2.tick_params(axis='y', labelsize=10)
+                ax2.tick_params(axis='x', labelsize=10)
+                ax2.set_xlim([f_min,f_max]);
+                ax2.set_ylim([-10,10]);
+                ax2.grid('on')
+                ax2.legend(loc='lower left', fontsize=10)
+                ax2.set_title(str(plot_title[m]) + ' ' + Pol + ' Theta Mispoint \nSW: ' + acu + '\nFreq = ' + ' X' + '\nTh=' + str(Th_deg_list[p]) + ', Phi=' + str(Ph_degree), fontsize=15)
+                fig2.tight_layout()
+                fig2.savefig(savePath + '\\' + str(plot_title[m]) + '_Theta_Mispoint_vs_Frequency_Th_'+ str(Th_deg_list[p]) + '_Phi_' + str(Ph_degree)+'.png', dpi=400)
 
+                # plot XPD
+                ax3.plot(x_fq_request, xpd_freq_request, markerList[i], markerfacecolor=colourMap[0][i], markeredgecolor='k',
+                         markersize=10, label='XPD ' + labelLog[i])
+                ax3.set_xlabel('Frequency, [GHz]', fontsize=10);
+                ax3.set_ylabel('XPD, [dB]\n(at req. angle)', fontsize=10)
+                yticks_param3 = np.linspace(0, 30, num=7)
+                ax3.set_yticks(yticks_param3)
+                ax3.tick_params(axis='y', labelsize=10)
+                ax3.tick_params(axis='x', labelsize=10)
+                ax3.set_xlim([f_min, f_max]);
+                ax3.set_ylim([0, 30]);  # plt.ylim([65, 75])
+                ax3.grid('on')
+                ax3.legend(loc='lower left', fontsize=10)
+                ax3.set_title(
+                    str(plot_title[m]) + ' ' + Pol + 'XPD \nSW: ' + acu + '\nFreq = ' + ' X' + '\nTh=' + str(
+                        Th_deg_list[p]) + ', Phi=' + str(Ph_degree), fontsize=15)
+                fig3.tight_layout()
+                fig3.savefig(savePath + '\\' + str(plot_title[m]) + '_XPD_vs_Frequency_Th_' + str(
+                    Th_deg_list[p]) + '_Phi_' + str(Ph_degree) + '.png', dpi=400)
 
+                #plot Phi mispointing if more than 1 phi cut has been measured (partial 3D measurement)
 
-# for p in range(len(Th_deg_list)):
-#
-#
-#     for l in range(len(Ph_deg)):
-#         plt.figure(figsize=([7, 6]))
-#         for i in range(len(fpathLog)):
-#             Ph_degree=Ph_deg[l]
-#             fpath = fpathLog[i]
-#             plot__gainVsfreq(fpath, Th_deg_list[p], Ph_degree)
-#             plt.plot(x, y, markerList[i], markerfacecolor= colourMap[0][i], markeredgecolor='k', markersize=10, label='Gain ' + labelLog[i])
-#             plt.plot(x, y - xpd_freq, markerList[i], markerfacecolor=colourMap[2][i], markeredgecolor='k', markersize=10, label='XP ' + labelLog[i])
-#             plt.xlabel('Frequency, [GHz]', fontsize=10);
-#             plt.ylabel('Gain & XP, [dB]\n(at req. angle)', fontsize=10)
-#             plt.yticks(np.linspace(0,100,num=21), fontsize=10)
-#             plt.xticks(fontsize=10)
-#             #plt.xticks(np.linspace(-100,100,num=21))
-#             plt.xlim([f_min,f_max]); plt.ylim([y_min_scan,y_max_scan]);# plt.ylim([65, 75])
-#             plt.grid('on')
-#             plt.legend(loc='lower left', fontsize=10)
-#             plt.title(Pol + 'Gain & XP \nSW: ' + acu + '\nFreq = ' + ' X' + '\nTh=' + str(Th_deg_list[p]) + ', Phi=' + str(Ph_degree), fontsize=15)
-#             plt.tight_layout()
-#             plt.savefig(savePath + '\\' +  'Gain_XP_Frequency_comparison_Th_'+ str(Th_deg_list[p]) + '_Phi_' + str(Ph_degree)+'.png', dpi=400)
-#         plt.close('all')
+                if meas_3D=='True':
+                    ax4.plot(x_fq_request, ph_fq_mispoint, markerList[i], markerfacecolor=colourMap[0][i],
+                             markeredgecolor='k', markersize=10, label='Gain ' + labelLog[i])
+                    ax4.set_xlabel('Frequency, [GHz]', fontsize=10);
+                    ax4.set_ylabel('Phi Pointing Error, [deg]', fontsize=10)
+                    yticks_param4 = np.linspace(-10, 10, num=21)
+                    ax4.set_yticks(yticks_param2)
+                    ax4.tick_params(axis='y', labelsize=10)
+                    ax4.tick_params(axis='x', labelsize=10)
+                    ax4.set_xlim([f_min, f_max]);
+                    ax4.set_ylim([-10, 10]);
+                    ax4.grid('on')
+                    ax4.legend(loc='lower left', fontsize=10)
+                    ax4.set_title(str(plot_title[
+                                          m]) + ' ' + Pol + ' Phi Mispoint \nSW: ' + acu + '\nFreq = ' + ' X' + '\nTh=' + str(
+                        Th_deg_list[p]) + ', Phi=' + str(Ph_degree), fontsize=15)
+                    fig4.tight_layout()
+                    fig4.savefig(savePath + '\\' + str(plot_title[m]) + '_Phi_Mispoint_vs_Frequency_Th_' + str(
+                        Th_deg_list[p]) + '_Phi_' + str(Ph_degree) + '.png', dpi=400)
 
-
-
-for p in range(len(Th_deg_list)):
-
-
-    for l in range(len(Ph_deg)):
-        plt.figure(figsize=([7, 6]))
-        for i in range(len(fpathLog)):
-            Ph_degree=Ph_deg[l]
-            fpath = fpathLog[i]
-            plot__mispointVsfreq(fpath, Th_deg_list[p], Ph_degree)
-            print(x)
-            print(th_mispoint)
-            plt.plot(x, th_mispoint, markerList[i], markerfacecolor= colourMap[0][i], markeredgecolor='k', markersize=10, label='Gain ' + labelLog[i])
-            #plt.plot(x, y - xpd_freq, markerList[i], markerfacecolor=colourMap[2][i], markeredgecolor='k', markersize=10, label='XP ' + labelLog[i])
-            plt.xlabel('Frequency, [GHz]', fontsize=10);
-            plt.ylabel('Gain & XP, [dB]\n(at req. angle)', fontsize=10)
-            plt.yticks(np.linspace(-10,10,num=21), fontsize=10)
-            plt.xticks(fontsize=10)
-            #plt.xticks(np.linspace(-100,100,num=21))
-            plt.xlim([f_min,f_max]); plt.ylim([-10,10]);# plt.ylim([65, 75])
-            plt.grid('on')
-            plt.legend(loc='lower left', fontsize=10)
-            plt.title(Pol + 'Gain & XP \nSW: ' + acu + '\nFreq = ' + ' X' + '\nTh=' + str(Th_deg_list[p]) + ', Phi=' + str(Ph_degree), fontsize=15)
-            plt.tight_layout()
-            plt.savefig(savePath + '\\' +  'Theta_Mispoint_Frequency_comparison_Th_'+ str(Th_deg_list[p]) + '_Phi_' + str(Ph_degree)+'.png', dpi=400)
-        plt.close('all')
-
-
-# for p in range(len(Th_deg_list)):
-#
-#     for i in range(len(fpathLog)):
-#         fpath = fpathLog[i]
-#         plot__gainVsfreq(fpath, Th_deg_list[p])
-#         plt.plot(x, xpd_freq, markerList[i], markeredgecolor='k', markersize=10, label = labelLog[i])
-#         plt.xlabel('freq [GHz]'); plt.ylabel('Beam 1 XPD [dB]\n(at req. angle)')
-#         plt.yticks(np.linspace(0,100,num=21))
-#         #plt.xticks(np.linspace(-100,100,num=21))
-#         plt.xlim([f_min,f_max]); plt.ylim([y_min_scan_xpd,y_max_scan_xpd]);# plt.ylim([65, 75])
-#         plt.grid('on')
-#         plt.legend(loc='lower left')
-#         plt.title('SW: ' + acu + '\nFreq = ' + ' X' + '\nb1: Th=' + str(Th_deg_list[p]) + ', Phi=' + str(Ph_deg), fontsize=15)
-#         plt.tight_layout()
-#         plt.savefig(savePath + '\\' +  'XPD_Frequency_comparison_Th_'+ str(Th_deg_list[p]) + '_Phi_' + str(Ph_deg)+'.png', dpi=400)
-#     plt.close('all')
-#
-#sb_mute = 'OFF'
-    
+            plt.close('all')
