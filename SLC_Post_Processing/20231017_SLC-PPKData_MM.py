@@ -9,13 +9,16 @@ plt.close('all')
 #fileName = r'G:\measurements\TLM_Meas\DVT_I-Type\Tx_TLM\QR00239\RHCP\B1\Cal_Investigation\SLC3\PP_Data\ppk_data'
 fileName = r'C:\Terminal_Testing\Plots\ppk_data'
 savePath=r'C:\Terminal_Testing\Plots'
-Th_deg_list=[0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 55.0, 60.0, 65.0, 70.0]
-Ph_deg=[0.0]#, 14.4, 28.8, 43.2, 57.6, 72.0, 86.4]
-meas_3D='False'
+Th_deg_list=[0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 55.0, 60.0, 65.0, 70.0] # measured theta pointing angles
+Ph_deg=[0.0]#, 14.4, 28.8, 43.2, 57.6, 72.0, 86.4] #measured phi pointing angles
+meas_3D='False' #defines whether the measurement is partial, full 3D or a single cut. If a single cut, value should be 'False', otherwisde 'True
 
 TLM_Type='Tx'
 Pol='RHCP'
-meas_Type='TLM'
+meas_Type='TLM' #depending on what's been measured, this variable can have the following values: 'TLM' - measurement is performed only on a TLM level
+                                                                                                # 'Single Lens' - measurements are performed only for the 3 lenses individually
+                                                                                                # 'TLM and Single Lens' - measurements are performed for the TLM and each lens individually
+                                                                                                # 'Lens 1', 'Lens 2' or 'Lens 3' - measurements are performed only for the specified individual lens
 
 if TLM_Type=='Rx':
     cal_freq_list = [17.7, 18.2, 18.7, 19.2, 19.7, 20.2, 20.7, 21.2]
@@ -62,7 +65,8 @@ elif meas_Type=='Lens 3':
 #             r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_G-Type_1p5/Tx_TLM/Comparisons/SLC3/TLM_Type_Comp_att0/Raw_Data/QR00034_G-Type_1p5',
 #             r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_G-Type_1p5/Tx_TLM/Comparisons/SLC3/TLM_Type_Comp_att0/Raw_Data/QR00060_G-Type_1p5']
 
-labelLog = ['Cal_13mm', 'Cal_10mm', 'Cal_15mm', 'Cal_20mm']#, 'QR00011_I-Type',
+# labels and identifying data from input file
+labelLog = ['Cal_13mm', 'Cal_10mm', 'Cal_15mm', 'Cal_20mm']
 fpathLog = [r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_I-Type/Tx_TLM/QR00239/RHCP/B1/Cal_Investigation/SLC3/Raw_Data/Ass_Cal',
             r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_I-Type/Tx_TLM/QR00239/RHCP/B1/Cal_Investigation/SLC3/Raw_Data/Ass_Cal_10mm',
             r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_I-Type/Tx_TLM/QR00239/RHCP/B1/Cal_Investigation/SLC3/Raw_Data/Ass_Cal_15mm',
@@ -77,9 +81,7 @@ fpathLog = [r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_I-Type/Tx_TLM/QR002
 #             r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_F-Type/Rx_TLM/QR440-0111-00005/RHCP/B1/Nest_Test/SLC2/Raw_Data/Plastic']
 
 
-dirScript = os.getcwd()
-os.chdir(dirScript)
-dfFull = pd.read_excel(fileName + ".xlsx")
+#defining markes and colors for the plots
 markerList=['s', 'o', '^', 'D', 'X', 'p', '*', 'H']
 colourMap = [['b','orange','g','r','purple','brown','magenta','grey'],
              ['c', 'peru', 'darkgreen', 'darksalmon', 'plum', 'chocolate', 'hotpink', 'k'],
@@ -151,7 +153,7 @@ def plot__paramVsfreq(df, fpath,Th_deg,Ph_degree, lens_enable):
     xpd_freq_request = np.array(df_request['xpd_dB'])
 
 
-# load
+# load the data from the xlsx input file
 dirScript = os.getcwd()
 os.chdir(dirScript)
 df = pd.read_excel(fileName + ".xlsx")
