@@ -184,6 +184,7 @@ for m in range(len(lens_enab)):
                 fpath = fpathLog[i]
                 plot__paramVsScan(df, fpath, cal_freq_list[k], meas_freq_list[k], Ph_degree, lens_enab[m])
 
+
                 # Plot Gain & XP
                 ax1.plot(x_scan_request, y_scan_request, markerList[i], markerfacecolor= colourMap[0][i], markeredgecolor='k', markersize=10, label='Gain ' + labelLog[i])
                 ax1.plot(x_scan_request, y_scan_request-xpd_scan_request, markerList[i], markerfacecolor= colourMap[2][i], markeredgecolor='k', markersize=10, label='XP ' + labelLog[i])
@@ -205,6 +206,7 @@ for m in range(len(lens_enab)):
                     savePath + '\\' + plot_title[m] + '_Gain_XP_vs_scan_Phi_' + str(Ph_degree) + 'Freq_' + str(meas_freq_list[k]) + 'GHz.png',
                     dpi=400)
 
+
                 #Plot Theta Mispoint
                 ax2.plot(x_scan_request, th_scan_mispoint, markerList[i], markerfacecolor=colourMap[0][i],
                          markeredgecolor='k', markersize=10, label='Gain ' + labelLog[i])
@@ -222,6 +224,7 @@ for m in range(len(lens_enab)):
                     plot_title[m]) + ' ' + Pol + ' Theta Mispoint \nSW: ' + acu + '\nFreq = ' + str(meas_freq_list[k]) + ' GHz' + '\nTh=' + 'X' + ', Phi=' + str(Ph_degree), fontsize=15)
                 fig2.tight_layout()
                 fig2.savefig(savePath + '\\' + str(plot_title[m]) + '_Theta_Mispoint_vs_Scan_Ph_' + str(Ph_degree) + 'Freq_' + str(meas_freq_list[k]) + 'GHz.png', dpi=400)
+
 
                 # Plot XPD
                 ax3.plot(x_scan_request, xpd_scan_request, markerList[i], markerfacecolor=colourMap[0][i],
@@ -246,9 +249,9 @@ for m in range(len(lens_enab)):
                         meas_freq_list[k]) + 'GHz.png',
                     dpi=400)
 
+
                 # Plot Phi Mispoint
                 if meas_3D=='True':
-
                     ax4.plot(x_scan_request, phi_scan_mispoint, markerList[i], markerfacecolor=colourMap[0][i],
                              markeredgecolor='k', markersize=10, label='Gain ' + labelLog[i])
                     ax4.set_xlabel('Theta, [deg]', fontsize=10);
@@ -294,6 +297,7 @@ for m in range(len(lens_enab)):
                 fpath = fpathLog[i]
                 plot__paramVsfreq(df, fpath, Th_deg_list[p], Ph_degree, lens_enab[m])
 
+
                 #plot Gain and XP
                 ax1.plot(x_fq_request, y_fq_request, markerList[i], markerfacecolor= colourMap[0][i], markeredgecolor='k', markersize=10, label='Gain ' + labelLog[i])
                 ax1.plot(x_fq_request, y_fq_request - xpd_freq_request, markerList[i], markerfacecolor=colourMap[2][i], markeredgecolor='k', markersize=10, label='XP ' + labelLog[i])
@@ -328,6 +332,7 @@ for m in range(len(lens_enab)):
                 fig2.tight_layout()
                 fig2.savefig(savePath + '\\' + str(plot_title[m]) + '_Theta_Mispoint_vs_Frequency_Th_'+ str(Th_deg_list[p]) + '_Phi_' + str(Ph_degree)+'.png', dpi=400)
 
+
                 # plot XPD
                 ax3.plot(x_fq_request, xpd_freq_request, markerList[i], markerfacecolor=colourMap[0][i], markeredgecolor='k',
                          markersize=10, label='XPD ' + labelLog[i])
@@ -348,8 +353,8 @@ for m in range(len(lens_enab)):
                 fig3.savefig(savePath + '\\' + str(plot_title[m]) + '_XPD_vs_Frequency_Th_' + str(
                     Th_deg_list[p]) + '_Phi_' + str(Ph_degree) + '.png', dpi=400)
 
-                #plot Phi mispointing if more than 1 phi cut has been measured (partial 3D measurement)
 
+                #plot Phi mispointing if more than 1 phi cut has been measured (partial 3D measurement)
                 if meas_3D=='True':
                     ax4.plot(x_fq_request, ph_fq_mispoint, markerList[i], markerfacecolor=colourMap[0][i],
                              markeredgecolor='k', markersize=10, label='Gain ' + labelLog[i])
