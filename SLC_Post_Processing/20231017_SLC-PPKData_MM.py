@@ -10,6 +10,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt; plt.rcParams['font.size'] = 15
 import os
+import ppt2pdf
 import pip
 plt.close('all')
 
@@ -19,7 +20,7 @@ fileName = r'C:\Terminal_Testing\Plots\ppk_data'
 savePath=r'C:\Terminal_Testing\Plots'
 plotsPath=r'C:\Terminal_Testing\Plots\Ass_Cal_Probe_Height_Comparison_Plots'
 input_prs= r'C:\Terminal_Testing\Post_Processing\pptx_template.pptx' # location of the pptx template
-pptxFname = 'Cal_Comp_Probe_Height.pptx' #text to be added to the filename of the pptx
+pptxFname = 'Cal_Comp_Probe_Height' #text to be added to the filename of the pptx
 pptxType= 'Calibration Comparison Probe Height' # text to be added to the title slide
 beam='B1'
 
@@ -693,13 +694,30 @@ run1.text= '' \
            '\n'
 
 
+prs.save(savePath+'\\'+ pptxFname+'.pptx')
 
+import aspose.slides as slides
 
+#pres = slides.Presentation(savePath+'\\'+ pptxFname+'.pptx')
 
+#pres.save(savePath+'\\'+ pptxFname+'.pdf', slides.export.SaveFormat.PDF)
 
-prs.save(savePath+'\\'+ pptxFname)
+import sys
+import os
+import comtypes.client
 
-#parse_args('test.ppt, test-output-markup.ppt)
-#analyze_ppt('test.pptx', 'test-output-markup.pptx')
+# Create powerpoint application object
+powerpoint = comtypes.client.CreateObject("Powerpoint.Application")
 
-#create_ppt(savePath+'\\'+'test1.pptx', savePath+'\\'+ 'test-output.pptx')
+# Set visibility to minimize
+powerpoint.Visible = 1
+
+# Open the powerpoint slides
+slides = powerpoint.Presentations.Open(savePath+'\\'+ pptxFname+'.pptx')
+
+# Save as PDF (formatType = 32)
+slides.SaveAs(savePath+'\\'+ pptxFname+'.pdf', 32)
+
+# Close the slide deck
+slides.Close()
+powerpoint.Quit()
