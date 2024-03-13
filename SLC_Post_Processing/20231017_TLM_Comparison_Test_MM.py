@@ -17,7 +17,7 @@ from pylab import *
 plt.close('all')
 
 filePath = r'C:\Users\mmarinova\Downloads\Evaluation' #Location of data
-filename = r'Eval_Freq_Rx_v3_vs_v4' #Filename for the putput plots
+filename = r'Eval_Freq_Rx_v3_vs_v4' #Filename for the output plots
 tlmType = ['00005', '00006', '00338_I-Type']
 plotTitle='Rx v3 vs Rx v4'
 termType = 'I-Type'

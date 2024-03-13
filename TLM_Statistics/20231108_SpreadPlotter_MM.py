@@ -18,11 +18,11 @@ plt.close('all')
 dirScript = os.getcwd()
 
 # parmas
-filePath = r'C:\Users\mmarinova\Downloads\I7_Tx_RFAs_RFCs\RFA_Files_post-processed\HFSS_offset_0dB_1sig'
-savePath = r'C:\Users\mmarinova\Downloads\I7_Tx_RFAs_RFCs\RFA_Files_post-processed\Plots'
+filePath = r'C:\Users\mmarinova\Downloads\HFSS_I16_Rx_Recalc_post-processed\HFSS_offset_3dB_2sig'
+savePath = r'C:\Users\mmarinova\Downloads\HFSS_I16_Rx_Recalc_post-processed\Plots'
 fileType='RFA_'
 termType='I-Type_Test'
-tlmType= 'Tx'
+tlmType= 'Rx'
 freqTxt='0_GHz_45C'
 ymax_RFA=60
 ymax_hist=50

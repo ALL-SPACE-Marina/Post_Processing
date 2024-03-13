@@ -9,7 +9,7 @@ import pickle
 
 matplotlib.use('Agg')
 
-filePath = r'C:\Users\mmarinova\Downloads\HFSS_I13_Tx_Recalc'
+filePath = r'C:\Users\mmarinova\Downloads\'
 #savePath = r'C:\Users\mmarinova\Downloads\RFA_Rx_I1\RFA_Files\17G7-20G7'
 
 tlmType = 'Tx'

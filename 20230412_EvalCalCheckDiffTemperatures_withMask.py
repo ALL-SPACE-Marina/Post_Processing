@@ -23,7 +23,7 @@ dirScript = os.getcwd()
 temperature = '45'
 tlmType = 'Tx'
 measType = 'Calibration'  # 'Calibration' or 'Evaluation'
-filePath = r'C:\Users\mmarinova\Downloads\HFSS_Mod_Rx\Offset_65'
+filePath = r'C:\Users\mmarinova\Downloads\1_20_35_to_1_20_3603'
 SaveFileName = '\Post_Processed_Data'#_RFA'
 BoardFont = '6'
 counter = 0
@@ -31,7 +31,7 @@ mask_lim_variable = []
 external_folder_name = "Figures\\StressTest\\MCR1_Rig1"
 measFileShift = 0
 droppedThresh = 9
-offset=76 #value with which to offset the HFSS mask due to active gain in the syste, and SGH calibration (account for 5dB additional attenuation in calibration sequence)
+offset=46 #value with which to offset the HFSS mask due to active gain in the syste, and SGH calibration (account for 5dB additional attenuation in calibration sequence)
 offset_mask=3 #additional offset on case of higher gain
 Exempt_Folder = 'combiner'
 

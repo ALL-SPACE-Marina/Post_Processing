@@ -274,3 +274,83 @@ for i in range(len(fpathLog)):
 
 # sb_mute = 'OFF'
 
+
+
+
+
+def plot__gainVstheta(fpath, cal_freq, meas_freq, phi_deg, lens_enable):
+    global dfPlot, df, x, y, columns, acu, xpd_theta
+
+    # load
+    dirScript = os.getcwd()
+    os.chdir(dirScript)
+    df = pd.read_excel(fileName + ".xlsx")
+    columns = df.columns.tolist()
+
+    #reduce
+
+    df = df[(df["phi_deg"] == phi_deg)]
+    df = df[(df["cal_freq_GHz"] == cal_freq)]
+    df = df[(df["freq_GHz"] == meas_freq)]
+    df = df[(df["entry_type"] == 'gain_at_requested_angle')]
+    df = df[(df["fpath_parent"] == fpath)]
+    df = df[(df["lens_enabled"] == lens_enable)]
+    acu=np.array(df['acu_version'])[0]
+    print(acu)
+
+    x = np.array(df['theta_deg'])
+    y = np.array(df['Gain_dB'])
+    xpd_theta=np.array(df['xpd_dB'])
+
+def plot__gainVsfreq(fpath,Th_deg,Ph_degree, lens_enable):
+    global dfPlot, df, x, y, columns, phi_meas_freq, xpd_freq
+
+    # load
+    dirScript = os.getcwd()
+    os.chdir(dirScript)
+    df = pd.read_excel(fileName + ".xlsx")
+    columns = df.columns.tolist()
+
+    #reduce
+    # df = df[(df["pb_theta_deg"] == b1_theta)]
+    df = df[(df["phi_deg"] == Ph_degree)]
+    # df = df[(df["sb_mute"] == sb_mute)]
+    df = df[(df["theta_deg"] == Th_deg)]
+    df = df[(df["freq_GHz"] == df["cal_freq_GHz"])]
+    df = df[(df["entry_type"] == 'gain_at_requested_angle')]
+    df = df[(df["lens_enabled"] == lens_enable)]
+    df = df[(df["fpath_parent"] == fpath)]
+
+    phi_meas_freq = np.array(df['pa_phi_deg'])
+    x = np.array(df['freq_GHz'])
+    y = np.array(df['Gain_dB'])
+    xpd_freq=np.array(df['xpd_dB'])
+
+
+def plot__mispointVsfreq(fpath,Th_deg,Ph_degree, lens_enable):
+    global dfPlot, df, x, columns, phi_meas_freq, phi_mispoint, th_mispoint,acu
+
+    # load
+    dirScript = os.getcwd()
+    os.chdir(dirScript)
+    df = pd.read_excel(fileName + ".xlsx")
+    columns = df.columns.tolist()
+
+    #reduce
+    df = df[(df["pa_phi_deg"] == Ph_degree)]
+    df = df[(df["pa_theta_deg"] == Th_deg)]
+    df = df[(df["freq_GHz"] == df["cal_freq_GHz"])]
+    df = df[(df["fpath_parent"] == fpath)]
+    df = df[(df["lens_enabled"] == lens_enable)]
+    df_request = df[(df["entry_type"] == 'gain_at_requested_angle')]
+    df_peak = df[(df["entry_type"] == 'gain_at_peak')]
+    acu = np.array(df['acu_version'])[0]
+
+    th_request=np.array(df_request['theta_deg'])
+    th_peak = np.array(df_peak['theta_deg'])
+    ph_request= np.array(df_request['phi_deg'])
+    ph_peak = np.array(df_peak['phi_deg'])
+    phi_mispoint= ph_peak-ph_request
+    th_mispoint= th_peak-th_request
+    x = np.array(df_request['freq_GHz'])
+    phi_meas_freq = np.array(df_request['pa_phi_deg'])
