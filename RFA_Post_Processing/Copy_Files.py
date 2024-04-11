@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt;
 import shutil
 
 
-filePath = r'C:\Users\mmarinova\Downloads\HFSS_I8_Tx_Recalc_51'
+filePath = r'C:\Users\mmarinova\Downloads\876_Corrected_Mask'
 # savePath = r'C:\Users\mmarinova\Downloads\RFA_Rx_I1\RFA_Files\17G7-20G7'
 
 tlmType = 'Tx'
@@ -35,7 +35,7 @@ for beamChoice in range(2):
                     files.append(os.path.join(root, file))
         filesRFA = []
         for i in range(len(files)):
-            if fileType in files[i] and 'GHz_' + str(f_set) + '0_GHz' in files[i] and 'Beam' + str(beam) in files[i]:# and 'teration_1' in files[i]:
+            if fileType in files[i] and 'GHz_' + str(f_set) + '0_GHz' in files[i] and 'Beam' + str(beam) in files[i] and 'teration_2' in files[i]:
                 # if 'RFA' in files[i] and 'both_' + str(f_set) + '_GHz' in files[i] and 'Beam'+str(beam) in files[i]:
                 filesRFA.append(files[i])
 

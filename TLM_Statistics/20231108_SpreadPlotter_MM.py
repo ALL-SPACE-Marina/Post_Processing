@@ -18,8 +18,8 @@ plt.close('all')
 dirScript = os.getcwd()
 
 # parmas
-filePath = r'C:\Users\mmarinova\Downloads\HFSS_I16_Rx_Recalc_post-processed\HFSS_offset_3dB_2sig'
-savePath = r'C:\Users\mmarinova\Downloads\HFSS_I16_Rx_Recalc_post-processed\Plots'
+filePath = r'C:\Users\mmarinova\Downloads\AllFiles_Gain_flatness_ov_freq'
+savePath = r'C:\Users\mmarinova\Downloads\Raw_Data_P1_Rx\Plots'
 fileType='RFA_'
 termType='I-Type_Test'
 tlmType= 'Rx'

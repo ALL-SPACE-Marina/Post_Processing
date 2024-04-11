@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt;
 
-plt.rcParams['font.size'] = 12
+plt.rcParams['font.size'] = 10
 import scipy
 from scipy.stats import norm
 import os
@@ -17,14 +17,14 @@ from pylab import *
 plt.close('all')
 
 filePath = r'C:\Users\mmarinova\Downloads\Evaluation' #Location of data
-filename = r'Eval_Freq_Rx_v3_vs_v4' #Filename for the output plots
-tlmType = ['00005', '00006', '00338_I-Type']
-plotTitle='Rx v3 vs Rx v4'
+filename = r'Port_Spread' #Filename for the output plots
+tlmType = ['420-0230-00789']#, '00006', '00338_I-Type']
+plotTitle='Port Spread '
 termType = 'I-Type'
-fqRange = 'Rx'
-chop = True
+fqRange = 'Tx'
+chop = False
 pltMinMax=False
-line='One'
+line='None' #'One'
 mark='o'
 
 if fqRange == 'Rx':
@@ -38,7 +38,7 @@ elif fqRange == 'Tx':
     plotXlimMin = 27.5
     plotXlimMax = 31.0
     plotYlimMin = -20
-    plotYlimMax = 30
+    plotYlimMax = 15
 
 
 # file path
@@ -55,7 +55,7 @@ def find_measFiles(path, fileString, beam, f_set):
                 files.append(os.path.join(root, file))
     measFiles = []
     for i in range(len(files)):
-        if fileString in files[i] and 'eam' + str(beam) in files[i] and '_GHz_'+str(f_set)+'0_GHz_45C' in files[i]:
+        if fileString in files[i] and 'eam' + str(beam) in files[i] and '_GHz_'+str(f_set)+'0_GHz_45C' in files[i] and 'teration_1' in files[i]:
             measFiles.append(files[i])
 
 
@@ -89,7 +89,8 @@ def load_measFiles(filePath):
 colourMap = [['b','orange','g','r','purple','brown','magenta','grey'],
              ['c', 'peru', 'darkgreen', 'darksalmon', 'plum', 'chocolate', 'hotpink', 'k'],
              ['cornflowerblue', 'tan', 'greenyellow', 'darkred', 'blueviolet', 'rosybrown', 'mediumvioletred', 'darkslategrey'],
-             ['deepskyblue', 'gold', 'olivedrab', 'crimson', 'indigo', 'sienna', 'orchid', 'silver']]
+             ['deepskyblue', 'gold', 'olivedrab', 'crimson', 'indigo', 'sienna', 'orchid', 'silver'],
+             'dodgerblue', 'goldenrod', 'seagreen', 'lightcoral', 'thistle', 'peachpuff', 'palevioletred', 'gainsboro']
 
 for beamChoice in range(2):
     beamChoice = beamChoice + 1
@@ -101,7 +102,7 @@ for beamChoice in range(2):
     for f_set in f_set_list:
         #plt.figure(figsize=(7,4))
 
-        print('GHz_' + str(f_set))
+        #print('GHz_' + str(f_set))
         find_measFiles(filePath, 'OP_2', beamChoice,f_set)
 
         if chop == False:
@@ -128,17 +129,17 @@ for beamChoice in range(2):
                         locLeft = 0;
                         locRight = len(meas_frequencies) - 1
                         plotLabel= tlmType[i]
-                    print(i)
+                    #print(i)
                     colMap=colourMap[i]
-                    print(plotLabel)
+                    #print(plotLabel)
                     if tlmType[i] in fileN:
 
                         # if beamChoice == 1:
                         #     plt.plot(meas_frequencies[locLeft:locRight+1], np.median(meas_array_gain, axis=0)[locLeft:locRight+1], color = colMap[count], linewidth = 5, label = str(f_set) + ' GHz')
                         # if beamChoice == 2:
                         #     plt.plot(meas_frequencies[locLeft:locRight+1], np.median(meas_array_gain, axis=0)[locLeft:locRight+1], color = colMap[count], linestyle = '--', linewidth = 5, label = str(f_set) + ' GHz')
-                        print(len(meas_array_gain))
-                        print(len(meas_array_gain[1]))
+                        #print(len(meas_array_gain))
+                        #print(len(meas_array_gain[1]))
                         if line=='None' and pltMinMax==False:
                             plt.plot(range(int(len(meas_array_gain) / 3)),
                                  meas_array_gain[0:int(len(meas_array_gain) / 3),np.argwhere((meas_frequencies==f_set))[0]], color = 'b', linestyle=line, marker=mark, markersize=2, label='Lens 1')
@@ -176,7 +177,7 @@ for beamChoice in range(2):
             plt.yticks(np.linspace(plotYlimMin, plotYlimMax, num=int((abs(plotYlimMin) + abs(plotYlimMax)) / 5) + 1))
             plt.grid('on')
 
-        plt.tight_layout()
+        #plt.tight_layout()
         # plt.title(termType+'\nf_set = ' + str(f_set) + ' GHz, Beam ' + str(beamChoice))
 
         if chop==True:
@@ -184,5 +185,5 @@ for beamChoice in range(2):
             plt.savefig(filePath + '\\' + filename + '_Beam_' + str(beamChoice) + '.png',
                     dpi=400)
         elif chop==False:
-            plt.title(plotTitle + '\nBeam ' + str(beamChoice) + ', f_set = ' + str(f_set) + ' GHz')
-            plt.savefig(filePath + '\\'+filename + '_f_set_' + str(f_set) + 'GHz_Beam_' + str(beamChoice) + '.png', dpi=400)
+            plt.title(plotTitle + ' Algo 1 ' +str(tlmType[0]) + '\nBeam ' + str(beamChoice) + ', f_set = ' + str(f_set) + ' GHz')
+            plt.savefig(filePath + '\\'+filename + '_'+ str(tlmType[0])+'_f_set_' + str(f_set) + 'GHz_Beam_' + str(beamChoice) + '.png', dpi=400)
