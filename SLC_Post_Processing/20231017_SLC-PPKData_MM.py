@@ -16,41 +16,42 @@ plt.close('all')
 
 # load
 #fileName = r'G:\measurements\TLM_Meas\DVT_I-Type\Tx_TLM\QR00239\RHCP\B1\Cal_Investigation\SLC3\PP_Data\ppk_data'
-fileName = r'C:\Terminal_Testing\Plots\ppk_data'
-savePath=r'C:\Terminal_Testing\Plots\Ass_Cal_Probe_Height_Comparison_Plots'
-plotsPath=r'C:\Terminal_Testing\Plots\Ass_Cal_Probe_Height_Comparison_Plots'
+fileName = r'G:\measurements\TLM_Meas\ESA\Rx_TLM\RHCP\B1\Beam_Cuts\SLC2\PP_Data\ppk_data'
+savePath= r'G:\measurements\TLM_Meas\ESA\Rx_TLM\RHCP\B1\Beam_Cuts\SLC2\PP_Data'
+plotsPath=r'G:\measurements\TLM_Meas\ESA\Rx_TLM\RHCP\B1\Beam_Cuts\SLC2\PP_Data\Plots'
 input_prs= r'C:\Terminal_Testing\Post_Processing\pptx_template.pptx' # location of the pptx template
 #pptxFname = 'Cal_Comp_BB_Cal_vs_Ass_Cal'#'Cal_Comp_Probe_Height' #text to be added to the filename of the pptx
-pptxFname = 'Cal_Comp_Probe_Height' #text to be added to the filename of the pptx
-pptxType= 'Calibration Comparison Probe Height' # text to be added to the title slide
+pptxFname = 'Rx_TLM_v3_vs_v4' #text to be added to the filename of the pptx
+pptxType= 'Performance Comparison Between Rx TLM v3 and Rx TLM v4' # text to be added to the title slide
 beam='B1'
 
-Th_deg_list=[0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 55.0, 60.0, 65.0, 70.0] # measured theta pointing angles
+Th_deg_list=[0.0, 10.0, 20.0, 30.0, 35.0, 40.0, 45.0, 50.0, 55.0, 60.0, 65.0, 70.0] # measured theta pointing angles
 Ph_deg=[0.0]#, 14.4, 28.8, 43.2, 57.6, 72.0, 86.4] #measured phi pointing angles
 meas_3D='False' #defines whether the measurement is partial, full 3D or a single cut. If a single cut, value should be 'False', otherwisde 'True
 
-TLM_Type='Tx'
+TLM_Type='Rx'
 Pol='RHCP'
-QRcode='440-0329-00239'
-PCBAver='175-0182/ Rev. 1.1'
-meas_Type='TLM' #depending on what's been measured, this variable can have the following values: 'TLM' - measurement is performed only on a TLM level
+QRcode='440-0355-00003 vs 440-0383-00167'
+PCBAver='175-0200 vs 175-0212'
+meas_Type='TLM and Single Lens' #depending on what's been measured, this variable can have the following values: 'TLM' - measurement is performed only on a TLM level
                                                                                                 # 'Single Lens' - measurements are performed only for the 3 lenses individually
                                                                                                 # 'TLM and Single Lens' - measurements are performed for the TLM and each lens individually
                                                                                                 # 'Lens 1', 'Lens 2' or 'Lens 3' - measurements are performed only for the specified individual lens
 
 if TLM_Type=='Rx':
-    cal_freq_list = [17.7, 18.2, 18.7, 19.2, 19.7, 20.2, 20.7, 21.2]
-    meas_freq_list =[17.7, 18.2, 18.7, 19.2, 19.7, 20.2, 20.7, 21.2]
+    cal_freq_list = [19.7]#[17.7, 18.2, 18.7, 19.2, 19.7, 20.2, 20.7, 21.2]
+    meas_freq_list =[19.7]#[17.7, 18.2, 18.7, 19.2, 19.7, 20.2, 20.7, 21.2]
     f_min=17.2
     f_max=21.7
-    y_min_scan=40
-    y_max_scan=90
+    y_min_scan=20
+    y_max_scan=70
     y_min_scan_xpd = 0
     y_max_scan_xpd = 30
     slcNum=2
+    minGain=55
 elif TLM_Type=='Tx':
-    cal_freq_list=[27.5, 28.0, 28.5, 29.0, 29.5, 30.0, 30.5, 31.0]
-    meas_freq_list=[27.5, 28.0, 28.5, 29.0, 29.5, 30.0, 30.5, 31.0]
+    cal_freq_list=[29.5]#[27.5, 28.0, 28.5, 29.0, 29.5, 30.0, 30.5, 31.0]
+    meas_freq_list=[29.5]#[27.5, 28.0, 28.5, 29.0, 29.5, 30.0, 30.5, 31.0]
     f_min = 27.0
     f_max = 31.5
     y_min_scan =20
@@ -58,24 +59,25 @@ elif TLM_Type=='Tx':
     y_min_scan_xpd = 0
     y_max_scan_xpd = 30
     slcNum=3
+    minGain=55
 
 if meas_Type=='TLM':
     lens_enab=['l1e_l2e_l3e']
     plot_title=['TLM']
 elif meas_Type=='Single Lens':
-    lens_enab=['l1e_l2d_l3d', 'l1d_l2e_l3d', 'l1d_l2d_l3d']
+    lens_enab=['l1e_l2d_l3d', 'l1d_l2e_l3d', 'l1d_l2d_l3e']
     plot_title = ['L1', 'L2', 'L3']
 elif meas_Type=='TLM and Single Lens':
-    lens_enab=['l1e_l2e_l3e', 'l1e_l2d_l3d', 'l1d_l2e_l3d', 'l1d_l2d_l3d']
+    lens_enab=['l1e_l2e_l3e', 'l1e_l2d_l3d', 'l1d_l2e_l3d', 'l1d_l2d_l3e']
     plot_title = ['TLM', 'L1', 'L2', 'L3']
 elif meas_Type=='Lens 1':
-    lens_enab='l1e_l2d_l3d'
+    lens_enab=['l1e_l2d_l3d']
     plot_title = ['L1']
 elif meas_Type=='Lens 2':
-    lens_enab='l1d_l2e_l3d'
+    lens_enab=['l1d_l2e_l3d']
     plot_title = ['L2']
 elif meas_Type=='Lens 3':
-    lens_enab='l1d_l2d_l3d'
+    lens_enab=['l1d_l2d_l3e']
     plot_title = ['L3']
 
 # labelLog = ['QR00057_F-Type', 'QR00012_G-Type', 'QR00002_G-Type', 'QR00034_G-Type_1p5', 'QR00060_G-Type_1p5']
@@ -93,12 +95,12 @@ elif meas_Type=='Lens 3':
             #r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_I-Type/Rx_TLM/Comparisons/SLC2/F_vs_G_vs_I/Raw_Data/QR00011_I-Type',
             #r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_I-Type/Tx_TLM/QR00239/RHCP/B1/Cal_Investigation/SLC3/Raw_Data/BB_Cal']
 
-labelLog = ['Cal_13mm', 'Cal_10mm', 'Cal_15mm', 'Cal_20mm']
-fpathLog = [r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_I-Type/Tx_TLM/QR00239/RHCP/B1/Cal_Investigation/SLC3/Raw_Data/Ass_Cal',
-            r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_I-Type/Tx_TLM/QR00239/RHCP/B1/Cal_Investigation/SLC3/Raw_Data/Ass_Cal_10mm',
-            r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_I-Type/Tx_TLM/QR00239/RHCP/B1/Cal_Investigation/SLC3/Raw_Data/Ass_Cal_15mm',
+labelLog = ['Rx TLM v3', 'Rx TLM v4']#'HFSS Ass Mask; HFSS MGL', '3L Mask; 0XPol Meas',  '3L Mask; BEW']
+fpathLog = [#r'/mnt/nfs/data/groups/measurements/TLM_Meas/PVT_P-Type/Tx_TLM_Algo2/QR00003/RHCP/B1/Beam_cuts/SLC3/Raw_Data/Algo1_HFSS_MGL',
+            r'/mnt/nfs/data/groups/measurements/TLM_Meas/ESA/Rx_TLM/RHCP/B1/Beam_Cuts/SLC2/Raw_Data/I-Type_QR00137',
+            #r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_I-Type/Tx_TLM/QR00239/RHCP/B1/Cal_Investigation/SLC3/Raw_Data/Ass_Cal_15mm',
             #r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_I-Type/Rx_TLM/Comparisons/SLC2/F_vs_G_vs_I/Raw_Data/QR00011_I-Type',
-            r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_I-Type/Tx_TLM/QR00239/RHCP/B1/Cal_Investigation/SLC3/Raw_Data/Ass_Cal_20mm']
+            r'/mnt/nfs/data/groups/measurements/TLM_Meas/ESA/Rx_TLM/RHCP/B1/Beam_Cuts/SLC2/Raw_Data/P-Type_Algo1_QR00167']
 
 # labelLog = ['Aluminum', 'Plastic'] #'QR00002_I-Type', 'QR00011_I-Type',
 # fpathLog = [r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_F-Type/Rx_TLM/QR440-0111-00005/RHCP/B1/Nest_Test/SLC2/Raw_Data/Aluminum',
@@ -141,6 +143,7 @@ def plot__paramVsScan(df, fpath, cal_freq, meas_freq, phi_deg, lens_enable):
 
     th_request = np.array(df_request['theta_deg'])
     th_peak = np.array(df_peak['theta_deg'])
+    print(th_request)
 
     ph_peak = np.array(df_peak['phi_deg'])
     ph_request = np.array(df_request['phi_deg'])
@@ -170,6 +173,7 @@ def plot__paramVsfreq(df, fpath,Th_deg,Ph_degree, lens_enable):
     th_peak = np.array(df_peak['theta_deg'])
 
     ph_peak = np.array(df_peak['phi_deg'])
+    #print(ph_peak)
     ph_request = np.array(df_request['phi_deg'])
 
     phi_fq_mispoint = ph_peak - ph_request
@@ -189,6 +193,7 @@ df = pd.read_excel(fileName + ".xlsx")
 columns = df.columns.tolist()
 
 for m in range(len(lens_enab)):
+    print(lens_enab[m])
 
     for k in range(len(cal_freq_list)):
 
@@ -203,6 +208,9 @@ for m in range(len(lens_enab)):
 
             fig3 = plt.figure(figsize=([7, 6]))
             ax3 = fig3.add_subplot(1, 1, 1)
+
+            fig5 = plt.figure(figsize=([7, 6]))
+            ax5 = fig5.add_subplot(1, 1, 1)
 
             if meas_3D == 'True':
                 fig4 = plt.figure(figsize=([7, 6]))
@@ -232,7 +240,32 @@ for m in range(len(lens_enab)):
                     fontsize=15)
                 fig1.tight_layout()
                 fig1.savefig(
-                    savePath + '\\' + plot_title[m] + '_Gain_XP_vs_scan_Phi_' + str(Ph_degree) + 'Freq_' + str(meas_freq_list[k]) + 'GHz.png',
+                    savePath + '\\' + 'Plots'+'\\' + plot_title[m] + '_Gain_XP_vs_scan_Phi_' + str(Ph_degree) + 'Freq_' + str(meas_freq_list[k]) + 'GHz.png',
+                    dpi=400)
+
+                # Plot Gain
+                ax5.plot(x_scan_request, y_scan_request, markerList[i], markerfacecolor=colourMap[0][i],
+                         markeredgecolor='k', markersize=10, label='Gain ' + labelLog[i])
+                if i== len(fpathLog)-1:
+                    ax5.axhline(y=minGain, color='r', linestyle='--', label='Pass Criteria')
+                ax5.set_xlabel('Theta, [deg]', fontsize=10);
+                ax5.set_ylabel('Gain, [dB]\n(at req. angle)', fontsize=10)
+                yticks_param = np.linspace(0, 100, num=21)
+                ax5.set_yticks(yticks_param)
+                ax5.tick_params(axis='y', labelsize=10)
+                ax5.tick_params(axis='x', labelsize=10)
+                ax5.set_xlim([-10, 80]);
+                ax5.set_ylim([y_min_scan, y_max_scan])
+                ax5.grid('on')
+                ax5.legend(loc='lower left', fontsize=10)
+                ax5.set_title(
+                    str(plot_title[m]) + ' ' + Pol + ' Gain' + '\nSW: ' + acu + '\nFreq = ' + str(
+                        meas_freq_list[k]) + ' GHz' + '\nTh=' + 'X' + ', Phi=' + str(Ph_degree),
+                    fontsize=15)
+                fig5.tight_layout()
+                fig5.savefig(
+                    savePath + '\\' + 'Plots' + '\\' + plot_title[m] + '_Gain_vs_scan_Phi_' + str(
+                        Ph_degree) + 'Freq_' + str(meas_freq_list[k]) + 'GHz.png',
                     dpi=400)
 
 
@@ -252,12 +285,14 @@ for m in range(len(lens_enab)):
                 ax2.set_title(str(
                     plot_title[m]) + ' ' + Pol + ' Theta Mispoint \nSW: ' + acu + '\nFreq = ' + str(meas_freq_list[k]) + ' GHz' + '\nTh=' + 'X' + ', Phi=' + str(Ph_degree), fontsize=15)
                 fig2.tight_layout()
-                fig2.savefig(savePath + '\\' + str(plot_title[m]) + '_Theta_Mispoint_vs_Scan_Ph_' + str(Ph_degree) + 'Freq_' + str(meas_freq_list[k]) + 'GHz.png', dpi=400)
+                fig2.savefig(savePath + '\\' + 'Plots'+'\\' + str(plot_title[m]) + '_Theta_Mispoint_vs_Scan_Ph_' + str(Ph_degree) + 'Freq_' + str(meas_freq_list[k]) + 'GHz.png', dpi=400)
 
 
                 # Plot XPD
                 ax3.plot(x_scan_request, xpd_scan_request, markerList[i], markerfacecolor=colourMap[0][i],
                          markeredgecolor='k', markersize=10, label='XPD ' + labelLog[i])
+                if i== len(fpathLog)-1:
+                    ax3.axhline(y=15, color='r', linestyle='--', label='Pass Criteria')
                 ax3.set_xlabel('Theta, [deg]', fontsize=10);
                 ax3.set_ylabel('XPD, [dB]\n(at req. angle)', fontsize=10)
                 yticks_param3 = np.linspace(0, 100, num=21)
@@ -274,7 +309,7 @@ for m in range(len(lens_enab)):
                     fontsize=15)
                 fig3.tight_layout()
                 fig3.savefig(
-                    savePath + '\\' + plot_title[m] + '_XPD_vs_scan_Phi_' + str(Ph_degree) + 'Freq_' + str(
+                    savePath + '\\' + 'Plots'+'\\' + plot_title[m] + '_XPD_vs_scan_Phi_' + str(Ph_degree) + 'Freq_' + str(
                         meas_freq_list[k]) + 'GHz.png',
                     dpi=400)
 
@@ -297,7 +332,7 @@ for m in range(len(lens_enab)):
                         plot_title[m]) + ' ' + Pol + ' Phi Mispoint \nSW: ' + acu + '\nFreq = ' + str(
                         meas_freq_list[k]) + ' GHz' + '\nTh=' + 'X' + ', Phi=' + str(Ph_degree), fontsize=15)
                     fig4.tight_layout()
-                    fig4.savefig(savePath + '\\' + str(plot_title[m]) + '_Phi_Mispoint_vs_Scan_Ph_' + str(
+                    fig4.savefig(savePath + '\\' + 'Plots'+'\\' + str(plot_title[m]) + '_Phi_Mispoint_vs_Scan_Ph_' + str(
                         Ph_degree) + 'Freq_' + str(meas_freq_list[k]) + 'GHz.png', dpi=400)
 
             plt.close('all')
@@ -316,6 +351,9 @@ for m in range(len(lens_enab)):
 
             fig3 = plt.figure(figsize=([7, 6]))
             ax3 = fig3.add_subplot(1, 1, 1)
+
+            fig5 = plt.figure(figsize=([7, 6]))
+            ax5 = fig5.add_subplot(1, 1, 1)
 
             if meas_3D=='True':
                 fig4 = plt.figure(figsize=([7, 6]))
@@ -342,7 +380,31 @@ for m in range(len(lens_enab)):
                 ax1.legend(loc='lower left', fontsize=10)
                 ax1.set_title(str(plot_title[m]) + ' ' + Pol + 'Gain & XP \nSW: ' + acu + '\nFreq = ' + ' X' + '\nTh=' + str(Th_deg_list[p]) + ', Phi=' + str(Ph_degree), fontsize=15)
                 fig1.tight_layout()
-                fig1.savefig(savePath + '\\' + str(plot_title[m]) + '_Gain_XP_vs_Frequency_Th_'+ str(Th_deg_list[p]) + '_Phi_' + str(Ph_degree)+'.png', dpi=400)
+                fig1.savefig(savePath + '\\' + 'Plots'+'\\' + str(plot_title[m]) + '_Gain_XP_vs_Frequency_Th_'+ str(Th_deg_list[p]) + '_Phi_' + str(Ph_degree)+'.png', dpi=400)
+
+
+                # plot Gain
+                ax5.plot(x_fq_request, y_fq_request, markerList[i], markerfacecolor=colourMap[0][i],
+                         markeredgecolor='k', markersize=10, label='Gain ' + labelLog[i])
+                if i== len(fpathLog)-1:
+                    ax5.axhline(y=55, color='r', linestyle='--', label='Pass Criteria')
+                ax5.set_xlabel('Frequency, [GHz]', fontsize=10);
+                ax5.set_ylabel('Gain, [dB]\n(at req. angle)', fontsize=10)
+                yticks_param = np.linspace(0, 100, num=21)
+                ax5.set_yticks(yticks_param)
+                ax5.tick_params(axis='y', labelsize=10)
+                ax5.tick_params(axis='x', labelsize=10)
+                ax5.set_xlim([f_min, f_max]);
+                ax5.set_ylim([y_min_scan, y_max_scan]);  # plt.ylim([65, 75])
+                ax5.grid('on')
+                ax5.legend(loc='lower left', fontsize=10)
+                ax5.set_title(
+                    str(plot_title[m]) + ' ' + Pol + 'Gain \nSW: ' + acu + '\nFreq = ' + ' X' + '\nTh=' + str(
+                        Th_deg_list[p]) + ', Phi=' + str(Ph_degree), fontsize=15)
+                fig5.tight_layout()
+                fig5.savefig(savePath + '\\' + 'Plots' + '\\' + str(plot_title[m]) + '_Gain_vs_Frequency_Th_' + str(
+                    Th_deg_list[p]) + '_Phi_' + str(Ph_degree) + '.png', dpi=400)
+
 
 
                 #Plot Theta Mispoint
@@ -359,12 +421,14 @@ for m in range(len(lens_enab)):
                 ax2.legend(loc='lower left', fontsize=10)
                 ax2.set_title(str(plot_title[m]) + ' ' + Pol + ' Theta Mispoint \nSW: ' + acu + '\nFreq = ' + ' X' + '\nTh=' + str(Th_deg_list[p]) + ', Phi=' + str(Ph_degree), fontsize=15)
                 fig2.tight_layout()
-                fig2.savefig(savePath + '\\' + str(plot_title[m]) + '_Theta_Mispoint_vs_Frequency_Th_'+ str(Th_deg_list[p]) + '_Phi_' + str(Ph_degree)+'.png', dpi=400)
+                fig2.savefig(savePath + '\\' + 'Plots'+'\\' + str(plot_title[m]) + '_Theta_Mispoint_vs_Frequency_Th_'+ str(Th_deg_list[p]) + '_Phi_' + str(Ph_degree)+'.png', dpi=400)
 
 
                 # plot XPD
                 ax3.plot(x_fq_request, xpd_freq_request, markerList[i], markerfacecolor=colourMap[0][i], markeredgecolor='k',
                          markersize=10, label='XPD ' + labelLog[i])
+                if i==len(fpathLog)-1:
+                    ax3.axhline(y=15, color='r', linestyle='--', label='Pass Criteria')
                 ax3.set_xlabel('Frequency, [GHz]', fontsize=10);
                 ax3.set_ylabel('XPD, [dB]\n(at req. angle)', fontsize=10)
                 yticks_param3 = np.linspace(0, 30, num=7)
@@ -379,7 +443,7 @@ for m in range(len(lens_enab)):
                     str(plot_title[m]) + ' ' + Pol + 'XPD \nSW: ' + acu + '\nFreq = ' + ' X' + '\nTh=' + str(
                         Th_deg_list[p]) + ', Phi=' + str(Ph_degree), fontsize=15)
                 fig3.tight_layout()
-                fig3.savefig(savePath + '\\' + str(plot_title[m]) + '_XPD_vs_Frequency_Th_' + str(
+                fig3.savefig(savePath + '\\' + 'Plots'+'\\' + str(plot_title[m]) + '_XPD_vs_Frequency_Th_' + str(
                     Th_deg_list[p]) + '_Phi_' + str(Ph_degree) + '.png', dpi=400)
 
 
@@ -401,7 +465,7 @@ for m in range(len(lens_enab)):
                                           m]) + ' ' + Pol + ' Phi Mispoint \nSW: ' + acu + '\nFreq = ' + ' X' + '\nTh=' + str(
                         Th_deg_list[p]) + ', Phi=' + str(Ph_degree), fontsize=15)
                     fig4.tight_layout()
-                    fig4.savefig(savePath + '\\' + str(plot_title[m]) + '_Phi_Mispoint_vs_Frequency_Th_' + str(
+                    fig4.savefig(savePath + '\\' + 'Plots'+'\\' + str(plot_title[m]) + '_Phi_Mispoint_vs_Frequency_Th_' + str(
                         Th_deg_list[p]) + '_Phi_' + str(Ph_degree) + '.png', dpi=400)
 
             plt.close('all')

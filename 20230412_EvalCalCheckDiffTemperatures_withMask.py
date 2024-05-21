@@ -23,7 +23,7 @@ dirScript = os.getcwd()
 temperature = '45'
 tlmType = 'Tx'
 measType = 'Calibration'  # 'Calibration' or 'Evaluation'
-filePath = r'C:\Users\mmarinova\Downloads\1_20_35_to_1_20_3603'
+filePath = r'C:\Users\mmarinova\Downloads\S2000_P1_20240502_v28'
 SaveFileName = '\Post_Processed_Data'#_RFA'
 BoardFont = '6'
 counter = 0
@@ -31,7 +31,7 @@ mask_lim_variable = []
 external_folder_name = "Figures\\StressTest\\MCR1_Rig1"
 measFileShift = 0
 droppedThresh = 9
-offset=46 #value with which to offset the HFSS mask due to active gain in the syste, and SGH calibration (account for 5dB additional attenuation in calibration sequence)
+offset=49 #value with which to offset the HFSS mask due to active gain in the syste, and SGH calibration (account for 5dB additional attenuation in calibration sequence)
 offset_mask=3 #additional offset on case of higher gain
 Exempt_Folder = 'combiner'
 
@@ -50,7 +50,7 @@ elif measType == 'Evaluation' and tlmType == 'Rx':
     f_set_list = [19.2]
     droppedThreshList = [droppedThresh]
 elif measType == 'Calibration' and tlmType == 'Rx':
-    f_set_list = [17.70, 18.20, 18.70, 19.20, 19.70, 20.20, 20.70, 21.20]
+    f_set_list = [19.2]#[17.70, 18.20, 18.70, 19.20, 19.70, 20.20, 20.70, 21.20]
     droppedThreshList = [25, 10, 15, 35, 35, 12, 12, 5]
 if measType == 'Calibration' and tlmType == 'Tx':
     mask = os.path.join(dirScript,r'2023_06_07_Sweep_Discrete_7pts_calibration_data_ES2_TX_TLM_Lens1_cal_equ_FR_Norm_renormalization_of_ports.csv')
@@ -59,7 +59,7 @@ elif measType == 'Calibration' and tlmType == 'Rx':
 elif measType == 'Evaluation' and tlmType == 'Tx':
     mask = os.path.join(dirScript, r'2023_09_22_Sweep_FF_calibration_data_LensA_Sim_HFSS_ES2iXS_perf_eval_stackup_Cluster_freq_change_sorted_Edit.csv')
 elif measType == 'Evaluation' and tlmType == 'Rx':
-    mask = os.path.join(dirScript, r'2023_03_16_discrete_17700_21200_8_calibration_data_175-0081_sanmina_rel1c_2023_03_07_L1L14_48feed_v10_performance_evaluation_250mm_dual_pol_probe.csv')
+    mask = os.path.join(dirScript, r'2023_10_31_discrete_17700_21200_8_calibration_data_175-0212_sanmina_rel1c_2023_perf_eval_sorted.csv')
 # definitions
 def find_measFiles(path, fileString, beam):
     global measFiles, files

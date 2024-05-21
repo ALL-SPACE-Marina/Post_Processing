@@ -16,15 +16,15 @@ from pylab import *
 
 plt.close('all')
 
-filePath = r'C:\Users\mmarinova\Downloads\Evaluation' #Location of data
+filePath = r'C:\Users\mmarinova\Downloads\Cap_Tune_TSW_1p20p3811' #Location of data
 filename = r'Port_Spread' #Filename for the output plots
-tlmType = ['420-0230-00789']#, '00006', '00338_I-Type']
+tlmType = ['420-0345-00001', '420-0345-00002']#,'420-0345-00001', '420-0345-00002', '420-0345-00011']
 plotTitle='Port Spread '
-termType = 'I-Type'
+termType = 'P-Type'
 fqRange = 'Tx'
 chop = False
 pltMinMax=False
-line='None' #'One'
+line= 'One' #'None' #'One'
 mark='o'
 
 if fqRange == 'Rx':
@@ -128,7 +128,7 @@ for beamChoice in range(2):
                     if chop == False:
                         locLeft = 0;
                         locRight = len(meas_frequencies) - 1
-                        plotLabel= tlmType[i]
+                        plotLabel= ['']
                     #print(i)
                     colMap=colourMap[i]
                     #print(plotLabel)
@@ -150,7 +150,7 @@ for beamChoice in range(2):
                         else:
                             plt.plot(meas_frequencies[locLeft:locRight + 1],
                                      np.median(meas_array_gain, axis=0)[locLeft:locRight + 1], color=colMap[count],
-                                     linewidth=5, label=plotLabel+str(tlmType[i]))
+                                     linewidth=5, label=plotLabel[0]+str(tlmType[i]))
 
 
                         if pltMinMax==True:

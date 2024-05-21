@@ -18,11 +18,11 @@ plt.close('all')
 dirScript = os.getcwd()
 
 # parmas
-filePath = r'C:\Users\mmarinova\Downloads\AllFiles_Gain_flatness_ov_freq'
-savePath = r'C:\Users\mmarinova\Downloads\Raw_Data_P1_Rx\Plots'
+filePath = r'C:\Users\mmarinova\Downloads\HFSS_P1_Tx_BB_FlatM_A2_31'
+savePath = r'C:\Users\mmarinova\Downloads\HFSS_P1_Tx_BB_FlatM_A2_31\Plots'
 fileType='RFA_'
 termType='I-Type_Test'
-tlmType= 'Rx'
+tlmType= 'Tx'
 freqTxt='0_GHz_45C'
 ymax_RFA=60
 ymax_hist=50
