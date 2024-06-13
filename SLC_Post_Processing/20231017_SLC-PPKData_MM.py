@@ -16,12 +16,12 @@ plt.close('all')
 
 # load
 #fileName = r'G:\measurements\TLM_Meas\DVT_I-Type\Tx_TLM\QR00239\RHCP\B1\Cal_Investigation\SLC3\PP_Data\ppk_data'
-fileName = r'G:\measurements\TLM_Meas\ESA\Rx_TLM\RHCP\B1\Beam_Cuts\SLC2\PP_Data\ppk_data'
-savePath= r'G:\measurements\TLM_Meas\ESA\Rx_TLM\RHCP\B1\Beam_Cuts\SLC2\PP_Data'
-plotsPath=r'G:\measurements\TLM_Meas\ESA\Rx_TLM\RHCP\B1\Beam_Cuts\SLC2\PP_Data\Plots'
+fileName = r'G:\measurements\TLM_Meas\PVT_P-Type\Tx_TLM_Algo2\QR00004\RHCP\B1\Beam_3D\SLC3\PP_Data\ppk_data'
+savePath= r'G:\measurements\TLM_Meas\PVT_P-Type\Tx_TLM_Algo2\QR00004\RHCP\B1\Beam_3D\SLC3\PP_Data'
+plotsPath=r'G:\measurements\TLM_Meas\PVT_P-Type\Tx_TLM_Algo2\QR00004\RHCP\B1\Beam_3D\SLC3\PP_Data\Plots'
 input_prs= r'C:\Terminal_Testing\Post_Processing\pptx_template.pptx' # location of the pptx template
 #pptxFname = 'Cal_Comp_BB_Cal_vs_Ass_Cal'#'Cal_Comp_Probe_Height' #text to be added to the filename of the pptx
-pptxFname = 'Rx_TLM_v3_vs_v4' #text to be added to the filename of the pptx
+pptxFname = 'Tx_TLM_BF1_vs_BF2_vs_BF3' #text to be added to the filename of the pptx
 pptxType= 'Performance Comparison Between Rx TLM v3 and Rx TLM v4' # text to be added to the title slide
 beam='B1'
 
@@ -29,11 +29,11 @@ Th_deg_list=[0.0, 10.0, 20.0, 30.0, 35.0, 40.0, 45.0, 50.0, 55.0, 60.0, 65.0, 70
 Ph_deg=[0.0]#, 14.4, 28.8, 43.2, 57.6, 72.0, 86.4] #measured phi pointing angles
 meas_3D='False' #defines whether the measurement is partial, full 3D or a single cut. If a single cut, value should be 'False', otherwisde 'True
 
-TLM_Type='Rx'
+TLM_Type='Tx'
 Pol='RHCP'
-QRcode='440-0355-00003 vs 440-0383-00167'
-PCBAver='175-0200 vs 175-0212'
-meas_Type='TLM and Single Lens' #depending on what's been measured, this variable can have the following values: 'TLM' - measurement is performed only on a TLM level
+QRcode='420-0345-00004'
+PCBAver='175-0182'
+meas_Type='TLM' #depending on what's been measured, this variable can have the following values: 'TLM' - measurement is performed only on a TLM level
                                                                                                 # 'Single Lens' - measurements are performed only for the 3 lenses individually
                                                                                                 # 'TLM and Single Lens' - measurements are performed for the TLM and each lens individually
                                                                                                 # 'Lens 1', 'Lens 2' or 'Lens 3' - measurements are performed only for the specified individual lens
@@ -95,12 +95,12 @@ elif meas_Type=='Lens 3':
             #r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_I-Type/Rx_TLM/Comparisons/SLC2/F_vs_G_vs_I/Raw_Data/QR00011_I-Type',
             #r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_I-Type/Tx_TLM/QR00239/RHCP/B1/Cal_Investigation/SLC3/Raw_Data/BB_Cal']
 
-labelLog = ['Rx TLM v3', 'Rx TLM v4']#'HFSS Ass Mask; HFSS MGL', '3L Mask; 0XPol Meas',  '3L Mask; BEW']
+labelLog = ['Tx v3, BF v1', 'Tx v3, BF v2', 'Tx v3, BF v3']#'HFSS Ass Mask; HFSS MGL', '3L Mask; 0XPol Meas',  '3L Mask; BEW']
 fpathLog = [#r'/mnt/nfs/data/groups/measurements/TLM_Meas/PVT_P-Type/Tx_TLM_Algo2/QR00003/RHCP/B1/Beam_cuts/SLC3/Raw_Data/Algo1_HFSS_MGL',
-            r'/mnt/nfs/data/groups/measurements/TLM_Meas/ESA/Rx_TLM/RHCP/B1/Beam_Cuts/SLC2/Raw_Data/I-Type_QR00137',
-            #r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_I-Type/Tx_TLM/QR00239/RHCP/B1/Cal_Investigation/SLC3/Raw_Data/Ass_Cal_15mm',
+            r'/mnt/nfs/data/groups/measurements/TLM_Meas/PVT_P-Type/Tx_TLM_Algo2/QR00004/RHCP/B1/Beam_3D/SLC3/Raw_Data/Ass_HFSS_Cal_MGL_Sim_W_TLM3',
+            r'/mnt/nfs/data/groups/measurements/TLM_Meas/PVT_P-Type/Tx_TLM_Algo2/QR00004/RHCP/B1/Beam_3D/SLC3/Raw_Data/Algo2_CM3L_BEW',
             #r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_I-Type/Rx_TLM/Comparisons/SLC2/F_vs_G_vs_I/Raw_Data/QR00011_I-Type',
-            r'/mnt/nfs/data/groups/measurements/TLM_Meas/ESA/Rx_TLM/RHCP/B1/Beam_Cuts/SLC2/Raw_Data/P-Type_Algo1_QR00167']
+            r'/mnt/nfs/data/groups/measurements/TLM_Meas/PVT_P-Type/Tx_TLM_Algo2/QR00004/RHCP/B1/Beam_3D/SLC3/Raw_Data/Algo2_FM_FAbs_Meas_MGL']
 
 # labelLog = ['Aluminum', 'Plastic'] #'QR00002_I-Type', 'QR00011_I-Type',
 # fpathLog = [r'/mnt/nfs/data/groups/measurements/TLM_Meas/DVT_F-Type/Rx_TLM/QR440-0111-00005/RHCP/B1/Nest_Test/SLC2/Raw_Data/Aluminum',
@@ -143,7 +143,7 @@ def plot__paramVsScan(df, fpath, cal_freq, meas_freq, phi_deg, lens_enable):
 
     th_request = np.array(df_request['theta_deg'])
     th_peak = np.array(df_peak['theta_deg'])
-    print(th_request)
+    #print(th_request)
 
     ph_peak = np.array(df_peak['phi_deg'])
     ph_request = np.array(df_request['phi_deg'])
