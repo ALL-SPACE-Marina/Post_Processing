@@ -8,11 +8,12 @@ import matplotlib.pyplot as plt;
 import shutil
 
 
-filePath = r'C:\Users\mmarinova\Downloads\SLC_TLM_Ref_00143'
+filePath = r'C:\Users\mmarinova\Downloads\HFSS_P3_v6_LUT_RC_FM_3dB'
 # savePath = r'C:\Users\mmarinova\Downloads\RFA_Rx_I1\RFA_Files\17G7-20G7'
 
 tlmType = 'Tx'
-fileType = 'RFC_2'  # RFC or RFA file. The _2 is needed otherwise it picks all csv files and throws an error
+fileN='RFA'
+fileType = fileN+'_2'  # RFC or RFA file. The _2 is needed otherwise it picks all csv files and throws an error
 
 if tlmType == 'Rx':
     f_set_Log = [17.7, 18.2, 18.7, 19.2, 19.7, 20.2, 20.7, 21.2]
@@ -35,7 +36,7 @@ for beamChoice in range(2):
                     files.append(os.path.join(root, file))
         filesRFA = []
         for i in range(len(files)):
-            if fileType in files[i] and 'GHz_' + str(f_set) + '0_GHz' in files[i] and 'Beam' + str(beam) in files[i]: #and 'teration_1' in files[i]:
+            if fileType in files[i] and 'GHz_' + str(f_set) + '0_GHz' in files[i] and 'Beam' + str(beam) in files[i]:# and 'teration_1' in files[i]:
                 # if 'RFA' in files[i] and 'both_' + str(f_set) + '_GHz' in files[i] and 'Beam'+str(beam) in files[i]:
                 filesRFA.append(files[i])
 
@@ -46,7 +47,7 @@ for beamChoice in range(2):
         find__RFAfiles(filePath, f_set, beam, fileType)
 
 
-        savePath = filePath + '_RFC'
+        savePath = filePath + '_' +fileN
         if not os.path.exists(savePath):
             os.makedirs(savePath)
 

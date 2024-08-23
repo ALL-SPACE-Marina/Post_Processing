@@ -18,8 +18,8 @@ plt.close('all')
 dirScript = os.getcwd()
 
 # parmas
-filePath = r'C:\Users\mmarinova\Downloads\HFSS_P1_Tx_BB_FlatM_A2_31'
-savePath = r'C:\Users\mmarinova\Downloads\HFSS_P1_Tx_BB_FlatM_A2_31\Plots'
+filePath = r'C:\Users\mmarinova\Downloads\P4_v7_cal_file_Tx_RFA_RFC_post-processed\Corrected_RFA'
+savePath = r'C:\Users\mmarinova\Downloads\P4_v7_cal_file_Tx_RFA_RFC_post-processed\Plots'
 fileType='RFA_'
 termType='I-Type_Test'
 tlmType= 'Tx'
