@@ -52,28 +52,6 @@ for beamChoice in range(2):
                     filesRFA.append(files[i])
 
 
-    def analyse__RFAparams(filesRFA, RFAparamDict, fileName ):
-        #global RFAparamDict, fileName
-
-        log_fileName = []
-        log_temperature = []
-        log_f_set = []
-        log_beam = []
-        log_board = []
-        for i in range(len(filesRFA)):
-            fileName = filesRFA[i].split('\\')[-1]
-            log_fileName.append(fileName)
-            log_temperature.append(fileName.split('_')[-1][0:-5])
-            log_f_set.append(fileName.split('_')[-3])
-            log_beam.append(fileName.split('_')[9][-1])
-            log_board.append(fileName.split('_')[4])
-        RFAparamDict['fileNames'] = log_fileName
-        RFAparamDict['temperatures'] = log_temperature
-        RFAparamDict['f_sets'] = log_f_set
-        RFAparamDict['beams'] = log_beam
-        RFAparamDict['boards'] = log_board
-        RFAparamDict['filePaths'] = filesRFA
-
 
     def load__RFA(filePath):
         global meas_info, meas_array, f_measPoints
@@ -100,10 +78,8 @@ for beamChoice in range(2):
         RFC_fileName = []
 
         find__RFAfiles(filePath, f_set, beam, fileType, filesRFA)
-        analyse__RFAparams(filesRFA, RFAparamDict,RFA_fileName)
 
         find__RFAfiles(filePath, f_set, beam, 'RFC_2',filesRFC)
-        analyse__RFAparams(filesRFC,RFCparamDict,RFC_fileName)
 
 
         ## Collate values and find global offsets
@@ -123,6 +99,8 @@ for beamChoice in range(2):
             RFC_meas_info = meas_info
             RFC_meas_array = meas_array
             RFC_f_measPoints = f_measPoints
+
+
             col = np.argmin(np.abs((RFA_f_measPoints - float(f_set)) ** 2)) * 2
             RFA_gain = RFA_meas_array[:, col]
             RFC_gain = RFC_meas_array[:,col]
