@@ -11,7 +11,7 @@ import pickle
 
 matplotlib.use('Agg')
 
-filePath = r'C:\Users\mmarinova\Downloads\HFSS_P3_v6_LUT_RC_FM_3dB_RFA_RFC'
+filePath = r'C:\Users\mmarinova\Downloads\P1\P1_Tx_Final_20240830'
 # savePath = r'C:\Users\mmarinova\Downloads\RFA_Rx_I1\RFA_Files\17G7-20G7'
 
 tlmType = 'Tx'
@@ -19,7 +19,7 @@ normVal = 0
 multiplier = 1
 fileType = 'RFA_2'  # RFC or RFA file. The _2 is needed otherwise it picks all csv files and throws an error
 multiIt = 'False'
-mask = 'FM_m3dB'
+mask = 'FM'
 
 if tlmType == 'Rx':
     f_set_Log = [17.7, 18.2, 18.7, 19.2, 19.7, 20.2, 20.7, 21.2]
