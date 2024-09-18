@@ -209,7 +209,10 @@ for f_set in f_set_Log:
             RFA_filename = filesRFA[j][beamChoice].split('\\')[-1]
             RFA_filename = RFA_filename.split('.csv')[-2]
 
-            file = open(RFA_savePath + '\\' + RFA_filename + '_' + offset + '_' + mask + '.csv', 'w+', newline='')
+            if f_set==30.5:
+                file = open(RFA_savePath + '\\' + RFA_filename + '_' + 'Offset' + '_' + mask + '.csv', 'w+', newline='')
+            else:
+                file = open(RFA_savePath + '\\' + RFA_filename + '_' + offset + '_' + mask + '.csv', 'w+', newline='')
             with file:
                 write = csv.writer(file)
                 write.writerows(RFA_meas_info_list)
@@ -229,7 +232,10 @@ for f_set in f_set_Log:
             RFC_filename = filesRFC[j][beamChoice].split('\\')[-1]
             RFC_filename = RFC_filename.split('.csv')[-2]
 
-            file = open(RFC_savePath + '\\' + RFC_filename + '_' + offset + '_' + mask + '.csv', 'w+', newline='')
+            if f_set==30.5:
+                file = open(RFC_savePath + '\\' + RFC_filename + '_' + 'Offset' + '_' + mask + '.csv', 'w+', newline='')
+            else:
+                file = open(RFC_savePath + '\\' + RFC_filename + '_' + offset + '_' + mask + '.csv', 'w+', newline='')
             with file:
                 write = csv.writer(file)
                 write.writerows(RFC_meas_info_list)
