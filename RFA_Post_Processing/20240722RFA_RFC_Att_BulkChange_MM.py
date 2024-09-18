@@ -11,7 +11,7 @@ import pickle
 
 matplotlib.use('Agg')
 
-filePath = r'C:\Users\mmarinova\Downloads\P1\P1_Tx_Final_20240830'
+filePath = r'C:\Users\mmarinova\Downloads\P6\P6_Tx_Final_20240913'
 # savePath = r'C:\Users\mmarinova\Downloads\RFA_Rx_I1\RFA_Files\17G7-20G7'
 
 tlmType = 'Tx'

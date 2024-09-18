@@ -11,7 +11,7 @@ import pickle
 
 matplotlib.use('Agg')
 
-filePath = r'C:\Users\mmarinova\Downloads\P1\P1_Tx_Raw_Data'
+filePath = r'C:\Users\mmarinova\Downloads\P6\P6_Tx_Raw_Data'
 # savePath = r'C:\Users\mmarinova\Downloads\RFA_Rx_I1\RFA_Files\17G7-20G7'
 
 tlmType = 'Tx'
@@ -146,7 +146,10 @@ for f_set in f_set_Log:
             RFA_gain = RFA_meas_array[:, col]
             RFC_gain = RFC_meas_array[:, col]
 
-            RFA_gain=RFA_gain-global_minVal[beamChoice]+normVal
+            if fset==30.5:
+                RFA_gain=RFA_gain
+            else:
+                RFA_gain=RFA_gain-global_minVal[beamChoice]+normVal
 
             L1_att = np.mean(gain[0:152]);  # Hardcoded for Tx
             L2_att = np.mean(gain[152:304]);  # Hardcoded for Tx
