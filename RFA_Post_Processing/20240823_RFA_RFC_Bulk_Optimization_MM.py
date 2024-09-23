@@ -11,12 +11,12 @@ import pickle
 
 matplotlib.use('Agg')
 
-filePath = r'C:\Users\mmarinova\Downloads\P6\P6_Tx_Raw_Data'
+filePath = r'C:\Users\mmarinova\Downloads\Raw_data_Assembly'
 # savePath = r'C:\Users\mmarinova\Downloads\RFA_Rx_I1\RFA_Files\17G7-20G7'
 
 tlmType = 'Tx'
 normVal = 0
-multiplier = 1
+multiplier = 3
 fileType = 'RFA_2'  # RFC or RFA file. The _2 is needed otherwise it picks all csv files and throws an error
 mask = 'FM'
 multiIt = 'False'
@@ -146,8 +146,8 @@ for f_set in f_set_Log:
             RFA_gain = RFA_meas_array[:, col]
             RFC_gain = RFC_meas_array[:, col]
 
-            if fset==30.5:
-                RFA_gain=RFA_gain
+            if f_set==30.5:
+                RFA_gain=RFA_gain-global_minVal[beamChoice]+normVal
             else:
                 RFA_gain=RFA_gain-global_minVal[beamChoice]+normVal
 
@@ -210,7 +210,8 @@ for f_set in f_set_Log:
             RFA_filename = RFA_filename.split('.csv')[-2]
 
             if f_set==30.5:
-                file = open(RFA_savePath + '\\' + RFA_filename + '_' + 'Offset' + '_' + mask + '.csv', 'w+', newline='')
+                #file = open(RFA_savePath + '\\' + RFA_filename + '_' + 'Offset' + '_' + mask + '.csv', 'w+', newline='')
+                file = open(RFA_savePath + '\\' + RFA_filename + '_' + offset + '_' + mask + '.csv', 'w+', newline='')
             else:
                 file = open(RFA_savePath + '\\' + RFA_filename + '_' + offset + '_' + mask + '.csv', 'w+', newline='')
             with file:
