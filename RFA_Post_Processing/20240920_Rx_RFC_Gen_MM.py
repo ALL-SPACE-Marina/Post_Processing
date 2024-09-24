@@ -21,7 +21,7 @@ fileType = 'RFA_2'  # RFC or RFA file. The _2 is needed otherwise it picks all c
 mask = 'HFSS'
 multiIt = 'False'
 
-RFC_offset=[5, 5, 5, 5, 5, 5, 7, 5]
+RFC_offset=[5, 5, 5, 5, 5, 5, 5, 5]
 
 if tlmType == 'Rx':
     f_set_Log = [17.7, 18.2, 18.7, 19.2, 19.7, 20.2, 20.7, 21.2]

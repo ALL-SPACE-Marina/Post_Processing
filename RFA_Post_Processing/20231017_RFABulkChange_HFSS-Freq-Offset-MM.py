@@ -9,12 +9,12 @@ import pickle
 
 matplotlib.use('Agg')
 
-filePath = r'\\172.16.4.240\calprep\I16\S2000_I16_PSD_20240830_v8\AllFiles'
+filePath = r'C:\Users\mmarinova\Downloads\P7\P7_Rx_Raw_Data'
 #savePath = r'C:\Users\mmarinova\Downloads\RFA_Rx_I1\RFA_Files\17G7-20G7'
 
-tlmType = 'Tx'
-normVal = 0
-multiplier= 1
+tlmType = 'Rx'
+normVal = 3
+multiplier= 2
 fileType='RFA_2' # RFC or RFA file. The _2 is needed otherwise it picks all csv files and throws an error
 zeroed='False'   # put to True if you want all amplitude values to be equalized to eqVal. Otherwise, put False. Will work for both RFC and RFA files
 eqVal = 0
@@ -252,7 +252,7 @@ for beamChoice in range(2):
             for o in range(len(meas_array_corrected)):
                 meas_info_list.append(list(meas_array_corrected[o,:]))
     
-            savePath = filePath + '_post-processed'+ '\\' + offset
+            savePath = filePath + '_post-processed_test'+ '\\' + offset
             if not os.path.exists(savePath):
                 os.makedirs(savePath) 
             # write new file

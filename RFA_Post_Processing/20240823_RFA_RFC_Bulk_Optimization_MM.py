@@ -11,7 +11,7 @@ import pickle
 
 matplotlib.use('Agg')
 
-filePath = r'C:\Users\mmarinova\Downloads\Raw_data_Assembly'
+filePath = r'C:\Users\mmarinova\Downloads\P7\P7_Tx_Raw_Data'
 # savePath = r'C:\Users\mmarinova\Downloads\RFA_Rx_I1\RFA_Files\17G7-20G7'
 
 tlmType = 'Tx'
@@ -202,7 +202,7 @@ for f_set in f_set_Log:
             for o in range(len(RFA_meas_array_corrected)):
                 RFA_meas_info_list.append(list(RFA_meas_array_corrected[o, :]))
 
-            RFA_savePath = filePath + '_post-processed' + '\\' + offset + '\\Corrected_RFA'
+            RFA_savePath = filePath + '_post-processed_Test' + '\\' + offset + '\\Corrected_RFA'
             if not os.path.exists(RFA_savePath):
                 os.makedirs(RFA_savePath)
                 # write new file
@@ -226,7 +226,7 @@ for f_set in f_set_Log:
             for o in range(len(RFC_meas_array_corrected)):
                 RFC_meas_info_list.append(list(RFC_meas_array_corrected[o, :]))
 
-            RFC_savePath = filePath + '_post-processed' + '\\' + offset + '\\Corrected_RFC'
+            RFC_savePath = filePath + '_post-processed_Test' + '\\' + offset + '\\Corrected_RFC'
             if not os.path.exists(RFC_savePath):
                 os.makedirs(RFC_savePath)
                 # write new file
