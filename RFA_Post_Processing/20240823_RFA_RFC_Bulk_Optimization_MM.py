@@ -16,7 +16,7 @@ filePath = r'C:\Users\mmarinova\Downloads\P7\P7_Tx_Raw_Data'
 
 tlmType = 'Tx'
 normVal = 0
-multiplier = 3
+multiplier = 1
 fileType = 'RFA_2'  # RFC or RFA file. The _2 is needed otherwise it picks all csv files and throws an error
 mask = 'FM'
 multiIt = 'False'

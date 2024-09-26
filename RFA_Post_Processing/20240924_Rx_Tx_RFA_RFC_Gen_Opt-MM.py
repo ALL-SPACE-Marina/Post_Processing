@@ -11,7 +11,7 @@ import pickle
 
 matplotlib.use('Agg')
 
-filePath = r'C:\Users\mmarinova\Downloads\P7\P7_Tx_Raw_Data' # Location of Raw Data
+filePath = r'C:\Users\mmarinova\Downloads\P8\P8_Tx_Raw_Data_RFA' # Location of Raw Data
 tlmType = 'Tx' # TLM Type
 
 multiIt = 'False' # Whether the calibration measurement has multiple iterations. If it does the RFA files will be picked from the first iteration. It is not a valid parameter for RFC files
@@ -276,9 +276,9 @@ for i in range(len(f_set_Log)):
             if diffPP=='True' and f_set==30.5:
                 if beamEq=='True':
                     if lensEq=='True':
-                        file = open(RFC_savePath + '\\' + RFC_filename + '_' + 'Offset' + '_BE_LE'+ mask + '.csv', 'w+', newline='')
+                        file = open(RFC_savePath + '\\' + RFC_filename + '_' + 'Offset' + '_BE_LE_'+ mask + '.csv', 'w+', newline='')
                     else:
-                        file = open(RFC_savePath + '\\' + RFC_filename + '_' + 'Offset' + '_BE' + mask + '.csv',
+                        file = open(RFC_savePath + '\\' + RFC_filename + '_' + 'Offset' + '_BE_' + mask + '.csv',
                                     'w+', newline='')
                 else:
                     file = open(RFC_savePath + '\\' + RFC_filename + '_' + 'Offset' + '_' + mask + '.csv', 'w+',
@@ -286,9 +286,9 @@ for i in range(len(f_set_Log)):
             else:
                 if beamEq == 'True':
                     if lensEq == 'True':
-                        file = open(RFC_savePath + '\\' + RFC_filename + '_' + RFC_offset_val + '_BE_LE' + mask + '.csv', 'w+', newline='')
+                        file = open(RFC_savePath + '\\' + RFC_filename + '_' + RFC_offset_val + '_BE_LE_' + mask + '.csv', 'w+', newline='')
                     else:
-                        file = open(RFC_savePath + '\\' + RFC_filename + '_' + RFC_offset_val + '_BE' + mask + '.csv',
+                        file = open(RFC_savePath + '\\' + RFC_filename + '_' + RFC_offset_val + '_BE_' + mask + '.csv',
                                     'w+', newline='')
                 else:
                     file = open(RFC_savePath + '\\' + RFC_filename + '_' + RFC_offset_val + '_' + mask + '.csv',
