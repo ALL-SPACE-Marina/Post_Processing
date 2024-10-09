@@ -1,17 +1,8 @@
 import numpy as np
 import os
-import json
 import csv
-import pandas as pd
-import matplotlib
-import matplotlib.pyplot as plt;
 
-plt.close('all')
-import pickle
-
-matplotlib.use('Agg')
-
-filePath = r'C:\Users\mmarinova\Downloads\P8\P8_Tx_Raw_Data_RFA' # Location of Raw Data
+filePath = r'C:\Users\mmarinova\Downloads\P12\HFSS_P12_Tx_LUT_v6_FM_RFA' # Location of Raw Data
 tlmType = 'Tx' # TLM Type
 
 multiIt = 'False' # Whether the calibration measurement has multiple iterations. If it does the RFA files will be picked from the first iteration. It is not a valid parameter for RFC files

@@ -8,11 +8,11 @@ import matplotlib.pyplot as plt;
 import shutil
 
 
-filePath = r'C:\Users\mmarinova\Downloads\P8\P8_Tx_Raw_Data'
+filePath = r'C:\Users\mmarinova\Downloads\P12\HFSS_P12_Tx_LUT_v6_FM'
 # savePath = r'C:\Users\mmarinova\Downloads\RFA_Rx_I1\RFA_Files\17G7-20G7'
 
 tlmType = 'Tx'
-fileN='RFC'
+fileN='RFA'
 fileType = fileN+'_2'  # RFC or RFA file. The _2 is needed otherwise it picks all csv files and throws an error
 
 if tlmType == 'Rx':

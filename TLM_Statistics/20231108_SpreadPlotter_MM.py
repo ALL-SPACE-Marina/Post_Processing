@@ -18,13 +18,13 @@ plt.close('all')
 dirScript = os.getcwd()
 
 # parmas
-filePath = r'C:\Users\mmarinova\Downloads\P4_v7_cal_file_Tx_RFA_RFC_post-processed\Corrected_RFA'
-savePath = r'C:\Users\mmarinova\Downloads\P4_v7_cal_file_Tx_RFA_RFC_post-processed\Plots'
+filePath = r'C:\Users\mmarinova\Downloads\P9\HFSS_P9_Tx_LUT_v6_FM'
+savePath = r'C:\Users\mmarinova\Downloads\P9\HFSS_P9_Tx_LUT_v6_FM\Plots'
 fileType='RFA_'
-termType='I-Type_Test'
+termType='P9_Test'
 tlmType= 'Tx'
 freqTxt='0_GHz_45C'
-ymax_RFA=60
+ymax_RFA=50
 ymax_hist=50
 xmax_hist=20
 if tlmType=='Rx':
