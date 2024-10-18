@@ -2,7 +2,7 @@ import numpy as np
 import os
 import csv
 
-filePath = r'C:\Users\mmarinova\Downloads\P12\HFSS_P12_Tx_LUT_v6_FM_RFA' # Location of Raw Data
+filePath = r'C:\Users\mmarinova\Downloads\P10\HFSS_P10_Tx_LUT_v6_FM_RFA' # Location of Raw Data
 tlmType = 'Tx' # TLM Type
 
 multiIt = 'False' # Whether the calibration measurement has multiple iterations. If it does the RFA files will be picked from the first iteration. It is not a valid parameter for RFC files
@@ -108,7 +108,7 @@ for i in range(len(f_set_Log)):
         minValLog = np.empty(len(filesRFA))
         stdLog = np.empty(len(filesRFA))
         medianLog = np.empty(len(filesRFA))
-        print(f_set)
+        print('Frequency is ', f_set)
         print('Beam is   ', beamChoice+1)
 
         for j in range(len(filesRFA)):
@@ -121,7 +121,7 @@ for i in range(len(f_set_Log)):
             stdLog[j]=stdVal
 
             boardName = filesRFA[j][beamChoice].split('\\')[-1].split('_')[6];
-            print(boardName);
+            #print(boardName);
 
         global_std[beamChoice] = np.mean(stdLog)
 
@@ -142,9 +142,14 @@ for i in range(len(f_set_Log)):
 
     for beamChoice in range(2):
 
+        print('Frequency is ', f_set)
+        print('Beam is   ', beamChoice + 1)
+
         for j in range(len(filesRFA)):
             load__RFA(filesRFA[j][beamChoice])
             #print(filesRFA[j][beamChoice])
+            boardName = filesRFA[j][beamChoice].split('\\')[-1].split('_')[6];
+            print(boardName);
 
             RFA_meas_info = meas_info
             RFA_meas_array = meas_array
@@ -179,9 +184,9 @@ for i in range(len(f_set_Log)):
 
 
             if lensEq=='True':
-                L1_att = np.mean(gain[0:int(numPorts)]);
-                L2_att = np.mean(gain[int(numPorts):int(2*numPorts)]);
-                L3_att = np.mean(gain[int(2*numPorts):(3*numPorts)]);
+                L1_att = np.mean(RFA_gain[0:int(numPorts)]);
+                L2_att = np.mean(RFA_gain[int(numPorts):int(2*numPorts)]);
+                L3_att = np.mean(RFA_gain[int(2*numPorts):(3*numPorts)]);
 
                 scaleval = min(L1_att, L2_att, L3_att)
 
@@ -206,6 +211,12 @@ for i in range(len(f_set_Log)):
             RFC_gain[4] = RFC_gain[4] + L3_att + RFC_gain_Corr[beamChoice] + RFC_offset[i]
             RFC_gain[5] = RFC_gain[5] + L3_att + RFC_gain_Corr[beamChoice] + RFC_offset[i]
 
+            print('L1att=', L1_att)
+            print('L2att=', L2_att)
+            print('L3att=', L3_att)
+
+            print('RFC_Gain_Corr=', RFC_gain_Corr[beamChoice])
+
             col1 = np.argmin(np.abs((RFA_f_measPoints - float(f_set)) ** 2))
 
             RFA_gain_full[:, col1] = RFA_gain
@@ -229,7 +240,7 @@ for i in range(len(f_set_Log)):
             for o in range(len(RFA_meas_array_corrected)):
                 RFA_meas_info_list.append(list(RFA_meas_array_corrected[o, :]))
 
-            RFA_savePath = filePath + '_post-processed' + '\\' + RFA_offset_val + '\\Corrected_RFA'
+            RFA_savePath = filePath + '_post-processed_1' + '\\' + RFA_offset_val + '\\Corrected_RFA'
             if not os.path.exists(RFA_savePath):
                 os.makedirs(RFA_savePath)
                 # write new file
@@ -252,7 +263,7 @@ for i in range(len(f_set_Log)):
             for o in range(len(RFC_meas_array_corrected)):
                 RFC_meas_info_list.append(list(RFC_meas_array_corrected[o, :]))
 
-            RFC_savePath = filePath + '_post-processed' + '\\' + RFA_offset_val + '\\Corrected_RFC'
+            RFC_savePath = filePath + '_post-processed_1' + '\\' + RFA_offset_val + '\\Corrected_RFC'
             if not os.path.exists(RFC_savePath):
                 os.makedirs(RFC_savePath)
                 # write new file

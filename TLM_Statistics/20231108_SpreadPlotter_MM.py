@@ -18,19 +18,24 @@ plt.close('all')
 dirScript = os.getcwd()
 
 # parmas
-filePath = r'C:\Users\mmarinova\Downloads\P9\HFSS_P9_Tx_LUT_v6_FM'
-savePath = r'C:\Users\mmarinova\Downloads\P9\HFSS_P9_Tx_LUT_v6_FM\Plots'
-fileType='RFA_'
-termType='P9_Test'
+filePath = r'C:\Users\mmarinova\Downloads\P10\HFSS_P10_Tx_LUT_v6_FM_RFA_post-processed'
+#savePath = r'C:\Users\mmarinova\Downloads\P5\P5_Tx_Raw_Data\Plots'
+fileType='RFA'
+termType='P10_Test'
 tlmType= 'Tx'
 freqTxt='0_GHz_45C'
-ymax_RFA=50
+ymax_RFA=20
 ymax_hist=50
 xmax_hist=20
 if tlmType=='Rx':
     freqList = [17.7, 18.2, 18.7, 19.2, 19.7, 20.2, 20.7, 21.2]
 elif tlmType=='Tx':
     freqList = [27.5, 28.0, 28.5, 29.0, 29.5, 30.0, 30.5, 31.0]
+
+
+savePath = filePath + '\\' + 'Plots_' + fileType
+if not os.path.exists(savePath):
+    os.makedirs(savePath)
 
 
 # definitions
@@ -96,7 +101,7 @@ def plot__1D(filePath, fileString, beam, title, freqSelect, ymax_RFA,ymax_hist, 
         axs[2, 0].plot(x, meas_array_gain[:, fcol][2*int(len(meas_array_gain[:, fcol])/3):3*int(len(meas_array_gain[:, fcol])/3)], colMap[count] + sty, label = meas_params['barcodes'])
         count = count + 1
     for i in range(3):
-        axs[i,0].set_ylim([0,ymax_RFA])
+        axs[i,0].set_ylim([-5,ymax_RFA])
         axs[i,0].set_ylabel('S$_{12}$ [dB] (Lens ' + str(i+1) + ')')
         axs[i,0].set_xlabel('port')
         axs[i,0].grid('on')
@@ -139,7 +144,7 @@ def plot__1D(filePath, fileString, beam, title, freqSelect, ymax_RFA,ymax_hist, 
 ##### run #####
 for l in range(len(freqList)):
     for k in range(2):
-        plot__1D(filePath, fileType,k+1, fileType + termType+'_'+tlmType+'_'+'Freq_' + str(freqList[l]), str(freqList[l])+freqTxt, ymax_RFA,ymax_hist,xmax_hist)
+        plot__1D(filePath, fileType+'_',k+1, fileType+ '_' + termType+'_'+tlmType+'_'+'Freq_' + str(freqList[l]), str(freqList[l])+freqTxt, ymax_RFA,ymax_hist,xmax_hist)
 
 # def dict__maps(txrx):
 #     global S2000_TX_RFIC_CHANNEL_MAP, S2000_TX_RFIC_PORT_MAP

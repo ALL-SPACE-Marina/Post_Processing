@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt;
 import shutil
 
 
-filePath = r'C:\Users\mmarinova\Downloads\P12\HFSS_P12_Tx_LUT_v6_FM'
+filePath = r'C:\Users\mmarinova\Downloads\P14\HFSS_P14_Tx_LUT_v6_FM'
 # savePath = r'C:\Users\mmarinova\Downloads\RFA_Rx_I1\RFA_Files\17G7-20G7'
 
 tlmType = 'Tx'
