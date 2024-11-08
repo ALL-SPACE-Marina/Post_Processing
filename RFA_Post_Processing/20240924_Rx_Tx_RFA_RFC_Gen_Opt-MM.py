@@ -2,7 +2,7 @@ import numpy as np
 import os
 import csv
 
-filePath = r'C:\Users\mmarinova\Downloads\P10\HFSS_P10_Tx_LUT_v6_FM_RFA' # Location of Raw Data
+filePath = r'C:\Terminal_Testing\Cal_files\P-Type_Terminal_Data\P20\HFSS_P20_Tx_LUT_v6_FM_v2_RFA' # Location of Raw Data
 tlmType = 'Tx' # TLM Type
 
 multiIt = 'False' # Whether the calibration measurement has multiple iterations. If it does the RFA files will be picked from the first iteration. It is not a valid parameter for RFC files
@@ -14,7 +14,7 @@ if tlmType == 'Rx':
     RFC_offset = [5, 5, 5, 5, 5, 5, 5, 5]  # Frequency dependent attenuation added to the Rx RFC files
     beamEq='False'
     lensEq='False'
-    mask = 'HFSS'  # Type of calibration mask
+    mask = 'HFSS_R1'  # Type of calibration mask
     diffPP = 'False'  # Different post processing for 30.5GHz (only Tx) files are required to be either recalculated beforehand with expected HFSS offset or to be calibrated with the correct mask
     numPorts=96
 
@@ -25,7 +25,7 @@ elif tlmType == 'Tx':
     RFC_offset = [0, 0, 0, 0, 0, 0, 0, 0]  # Frequency dependent attenuation added to the Rx RFC files
     beamEq='True'
     lensEq='True'
-    mask = 'FM'  # Type of calibration mask
+    mask = 'FM_R1'  # Type of calibration mask
     diffPP = 'True'  # Different post processing for 30.5GHz (only Tx) files are required to be either recalculated beforehand with expected HFSS offset or to be calibrated with the correct mask
     numPorts=152
 
@@ -240,7 +240,7 @@ for i in range(len(f_set_Log)):
             for o in range(len(RFA_meas_array_corrected)):
                 RFA_meas_info_list.append(list(RFA_meas_array_corrected[o, :]))
 
-            RFA_savePath = filePath + '_post-processed_1' + '\\' + RFA_offset_val + '\\Corrected_RFA'
+            RFA_savePath = filePath + '_post-processed' + '\\' + RFA_offset_val + '\\Corrected_RFA'
             if not os.path.exists(RFA_savePath):
                 os.makedirs(RFA_savePath)
                 # write new file
@@ -263,7 +263,7 @@ for i in range(len(f_set_Log)):
             for o in range(len(RFC_meas_array_corrected)):
                 RFC_meas_info_list.append(list(RFC_meas_array_corrected[o, :]))
 
-            RFC_savePath = filePath + '_post-processed_1' + '\\' + RFA_offset_val + '\\Corrected_RFC'
+            RFC_savePath = filePath + '_post-processed' + '\\' + RFA_offset_val + '\\Corrected_RFC'
             if not os.path.exists(RFC_savePath):
                 os.makedirs(RFC_savePath)
                 # write new file

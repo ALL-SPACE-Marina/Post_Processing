@@ -18,10 +18,10 @@ plt.close('all')
 dirScript = os.getcwd()
 
 # parmas
-filePath = r'C:\Users\mmarinova\Downloads\P10\HFSS_P10_Tx_LUT_v6_FM_RFA_post-processed'
+filePath = r'C:\Terminal_Testing\Cal_files\P-Type_Terminal_Data\P13\HFSS_P13_Tx_LUT_v6_FM_RFA_post-processed'
 #savePath = r'C:\Users\mmarinova\Downloads\P5\P5_Tx_Raw_Data\Plots'
-fileType='RFA'
-termType='P10_Test'
+fileType='RFC'
+termType='P13_Test'
 tlmType= 'Tx'
 freqTxt='0_GHz_45C'
 ymax_RFA=20
@@ -101,7 +101,7 @@ def plot__1D(filePath, fileString, beam, title, freqSelect, ymax_RFA,ymax_hist, 
         axs[2, 0].plot(x, meas_array_gain[:, fcol][2*int(len(meas_array_gain[:, fcol])/3):3*int(len(meas_array_gain[:, fcol])/3)], colMap[count] + sty, label = meas_params['barcodes'])
         count = count + 1
     for i in range(3):
-        axs[i,0].set_ylim([-5,ymax_RFA])
+        axs[i,0].set_ylim([-10,ymax_RFA])
         axs[i,0].set_ylabel('S$_{12}$ [dB] (Lens ' + str(i+1) + ')')
         axs[i,0].set_xlabel('port')
         axs[i,0].grid('on')
