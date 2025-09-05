@@ -9,11 +9,12 @@ multiIt = 'False' # Whether the calibration measurement has multiple iterations.
 
 if tlmType == 'Rx':
     f_set_Log = [17.7, 18.2, 18.7, 19.2, 19.7, 20.2, 20.7, 21.2]
-    normVal = 3  # Min attenuation value for RFA optimisation
+    normVal = 0  # Min attenuation value for RFA optimisation
     multiplier = 2  # sigma range away from the median value that is considered acceptable
     RFC_offset = [5, 5, 5, 5, 5, 5, 5, 5]  # Frequency dependent attenuation added to the Rx RFC files
-    beamEq='False'
-    lensEq='False'
+    beamEq='True'
+    lensEq='True'
+    freqEQ='True'
     mask = 'HFSS_R1'  # Type of calibration mask
     diffPP = 'False'  # Different post processing for 30.5GHz (only Tx) files are required to be either recalculated beforehand with expected HFSS offset or to be calibrated with the correct mask
     numPorts=96
@@ -25,6 +26,7 @@ elif tlmType == 'Tx':
     RFC_offset = [0, 0, 0, 0, 0, 0, 0, 0]  # Frequency dependent attenuation added to the Rx RFC files
     beamEq='True'
     lensEq='True'
+    freqEQ='True'
     mask = 'FM_R1'  # Type of calibration mask
     diffPP = 'True'  # Different post processing for 30.5GHz (only Tx) files are required to be either recalculated beforehand with expected HFSS offset or to be calibrated with the correct mask
     numPorts=152
@@ -179,9 +181,18 @@ for i in range(len(f_set_Log)):
 
             if diffPP=='True' and f_set==30.5:
                 RFA_gain=RFA_gain
+                if freqEQ=='True':
+                    freqEq_coef=np.full_like(global_minVal,6)-RFC_gain_Corr
+                else:
+                    freqEq_coef = np.full_like(global_minVal, 0)
             else:
                 RFA_gain=RFA_gain-global_minVal[beamChoice]+normVal
+                if freqEQ == 'True':
+                    freqEq_coef = global_minVal-normVal-RFC_gain_Corr
+                else:
+                    freqEq_coef = np.full_like(global_minVal, 0)
 
+            print('Frequency equalisation coefficient: ',freqEq_coef)
 
             if lensEq=='True':
                 L1_att = np.mean(RFA_gain[0:int(numPorts)]);
@@ -204,12 +215,12 @@ for i in range(len(f_set_Log)):
             RFA_gain[int(numPorts):int(2*numPorts)] = RFA_gain[int(numPorts):int(2*numPorts)] - L2_att
             RFA_gain[int(2*numPorts):(3*numPorts)] = RFA_gain[int(2*numPorts):(3*numPorts)] - L3_att
 
-            RFC_gain[0] = RFC_gain[0] + L1_att + RFC_gain_Corr[beamChoice]+ RFC_offset[i]
-            RFC_gain[1] = RFC_gain[1] + L1_att + RFC_gain_Corr[beamChoice] + RFC_offset[i]
-            RFC_gain[2] = RFC_gain[2] + L2_att + RFC_gain_Corr[beamChoice] + RFC_offset[i]
-            RFC_gain[3] = RFC_gain[3] + L2_att + RFC_gain_Corr[beamChoice] + RFC_offset[i]
-            RFC_gain[4] = RFC_gain[4] + L3_att + RFC_gain_Corr[beamChoice] + RFC_offset[i]
-            RFC_gain[5] = RFC_gain[5] + L3_att + RFC_gain_Corr[beamChoice] + RFC_offset[i]
+            RFC_gain[0] = RFC_gain[0] + L1_att + RFC_gain_Corr[beamChoice]+ RFC_offset[i] + freqEq_coef[beamChoice]
+            RFC_gain[1] = RFC_gain[1] + L1_att + RFC_gain_Corr[beamChoice] + RFC_offset[i] + freqEq_coef[beamChoice]
+            RFC_gain[2] = RFC_gain[2] + L2_att + RFC_gain_Corr[beamChoice] + RFC_offset[i] + freqEq_coef[beamChoice]
+            RFC_gain[3] = RFC_gain[3] + L2_att + RFC_gain_Corr[beamChoice] + RFC_offset[i] + freqEq_coef[beamChoice]
+            RFC_gain[4] = RFC_gain[4] + L3_att + RFC_gain_Corr[beamChoice] + RFC_offset[i] + freqEq_coef[beamChoice]
+            RFC_gain[5] = RFC_gain[5] + L3_att + RFC_gain_Corr[beamChoice] + RFC_offset[i] + freqEq_coef[beamChoice]
 
             print('L1att=', L1_att)
             print('L2att=', L2_att)
@@ -278,24 +289,62 @@ for i in range(len(f_set_Log)):
             if diffPP=='True' and f_set==30.5:
                 if beamEq=='True':
                     if lensEq=='True':
-                        file = open(RFC_savePath + '\\' + RFC_filename + '_' + 'Offset' + '_BE_LE_'+ mask + '.csv', 'w+', newline='')
+                        if freqEQ=='True':
+                            file = open(RFC_savePath + '\\' + RFC_filename + '_' + 'Offset' + '_BE_LE_FEQ_' + mask + '.csv',
+                                        'w+', newline='')
+                        else:
+                            file = open(RFC_savePath + '\\' + RFC_filename + '_' + 'Offset' + '_BE_LE_'+ mask + '.csv', 'w+', newline='')
                     else:
-                        file = open(RFC_savePath + '\\' + RFC_filename + '_' + 'Offset' + '_BE_' + mask + '.csv',
+                        if freqEQ=='True':
+                            file = open(RFC_savePath + '\\' + RFC_filename + '_' + 'Offset' + '_BE_FEQ_' + mask + '.csv',
+                                        'w+', newline='')
+                        else:
+                            file = open(RFC_savePath + '\\' + RFC_filename + '_' + 'Offset' + '_BE_' + mask + '.csv',
                                     'w+', newline='')
                 else:
-                    file = open(RFC_savePath + '\\' + RFC_filename + '_' + 'Offset' + '_' + mask + '.csv', 'w+',
+                    if lensEq=='True':
+                        if freqEQ=='True':
+                            file = open(RFC_savePath + '\\' + RFC_filename + '_' + 'Offset' + '_LE_FEQ_' + mask + '.csv',
+                                        'w+', newline='')
+                        else:
+                            file = open(RFC_savePath + '\\' + RFC_filename + '_' + 'Offset' + '_LE_'+ mask + '.csv', 'w+', newline='')
+                    else:
+                        if freqEQ=='True':
+                            file = open(RFC_savePath + '\\' + RFC_filename + '_' + 'Offset' + '_FEQ_' + mask + '.csv',
+                                        'w+', newline='')
+                        else:
+                            file = open(RFC_savePath + '\\' + RFC_filename + '_' + 'Offset' + '_' + mask + '.csv', 'w+',
                                 newline='')
             else:
                 if beamEq == 'True':
                     if lensEq == 'True':
-                        file = open(RFC_savePath + '\\' + RFC_filename + '_' + RFC_offset_val + '_BE_LE_' + mask + '.csv', 'w+', newline='')
+                        if freqEQ=='True':
+                            file = open(RFC_savePath + '\\' + RFC_filename + '_' + RFC_offset_val + '_BE_LE_FEQ_' + mask + '.csv',
+                                        'w+', newline='')
+                        else:
+                            file = open(RFC_savePath + '\\' + RFC_filename + '_' + RFC_offset_val + '_BE_LE_'+ mask + '.csv', 'w+', newline='')
                     else:
-                        file = open(RFC_savePath + '\\' + RFC_filename + '_' + RFC_offset_val + '_BE_' + mask + '.csv',
+                        if freqEQ=='True':
+                            file = open(RFC_savePath + '\\' + RFC_filename + '_' + RFC_offset_val + '_BE_FEQ_' + mask + '.csv',
+                                        'w+', newline='')
+                        else:
+                            file = open(RFC_savePath + '\\' + RFC_filename + '_' + RFC_offset_val + '_BE_' + mask + '.csv',
                                     'w+', newline='')
-                else:
-                    file = open(RFC_savePath + '\\' + RFC_filename + '_' + RFC_offset_val + '_' + mask + '.csv',
-                                'w+', newline='')
 
+                else:
+                    if lensEq=='True':
+                        if freqEQ=='True':
+                            file = open(RFC_savePath + '\\' + RFC_filename + '_' + RFC_offset_val + '_LE_FEQ_' + mask + '.csv',
+                                        'w+', newline='')
+                        else:
+                            file = open(RFC_savePath + '\\' + RFC_filename + '_' + RFC_offset_val + '_LE_'+ mask + '.csv', 'w+', newline='')
+                    else:
+                        if freqEQ=='True':
+                            file = open(RFC_savePath + '\\' + RFC_filename + '_' + RFC_offset_val + '_FEQ_' + mask + '.csv',
+                                        'w+', newline='')
+                        else:
+                            file = open(RFC_savePath + '\\' + RFC_filename + '_' + RFC_offset_val + '_' + mask + '.csv', 'w+',
+                                newline='')
 
             with file:
                 write = csv.writer(file)

@@ -14,11 +14,11 @@ from pylab import *
 plt.close('all')
 
 #filePath = r'C:\Users\mmarinova\Downloads\2023-09-01_21-43-12_MCR3_Rig1_eval_QR00003_F-Type_SM_P1Opt_CT_BC'
-filePath = r'C:\Users\mmarinova\Downloads\Evaluation'
+filePath = r'C:\Tx_vs_Rx_lenses'
 filename = r'Eval_Freq_Rx_v3_vs_v4'
 #tlmType= ['S-Type', 'F-Type_SM_GOpt_CT_nBC', 'F-Type_TM_GOpt_CT_nBC', 'F-Type_TM_P1Opt_CT_BC', 'F-Type_SM_P1Opt_CT_BC']
-tlmType= ['QR420-0267-00006', 'QR420-0254-00338']
-termType='I-Type'
+tlmType= ['Rx Lenses', 'Tx Lenses']
+termType='P-Type'
 fqRange='Rx'
 
 # for i in range(len(tlmType)):

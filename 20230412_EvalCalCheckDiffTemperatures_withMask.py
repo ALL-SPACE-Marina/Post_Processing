@@ -21,19 +21,21 @@ dirScript = os.getcwd()
 
 # parmas
 temperature = '45'
-tlmType = 'Tx'
+tlmType = 'Rx'
 measType = 'Calibration'  # 'Calibration' or 'Evaluation'
-filePath = r'C:\Users\mmarinova\Downloads\S2000_P1_20240502_v28'
-SaveFileName = '\Post_Processed_Data'#_RFA'
+filePath = r'C:\Tx_vs_Rx_lenses'
+SaveFileName = '\\Post_Processed_Data'#_RFA'
 BoardFont = '6'
 counter = 0
 mask_lim_variable = []
-external_folder_name = "Figures\\StressTest\\MCR1_Rig1"
+external_folder_name = "Figures\\"
 measFileShift = 0
 droppedThresh = 9
 offset=49 #value with which to offset the HFSS mask due to active gain in the syste, and SGH calibration (account for 5dB additional attenuation in calibration sequence)
 offset_mask=3 #additional offset on case of higher gain
 Exempt_Folder = 'combiner'
+string1='440-0484'
+string2='440-0437'
 
 # frequencies to iterate through
 if tlmType == 'Tx':
@@ -50,19 +52,19 @@ elif measType == 'Evaluation' and tlmType == 'Rx':
     f_set_list = [19.2]
     droppedThreshList = [droppedThresh]
 elif measType == 'Calibration' and tlmType == 'Rx':
-    f_set_list = [19.2]#[17.70, 18.20, 18.70, 19.20, 19.70, 20.20, 20.70, 21.20]
+    f_set_list = [17.70, 18.20, 18.70, 19.20, 19.70, 20.20, 20.70, 21.20]
     droppedThreshList = [25, 10, 15, 35, 35, 12, 12, 5]
 if measType == 'Calibration' and tlmType == 'Tx':
     mask = os.path.join(dirScript,r'2023_06_07_Sweep_Discrete_7pts_calibration_data_ES2_TX_TLM_Lens1_cal_equ_FR_Norm_renormalization_of_ports.csv')
 elif measType == 'Calibration' and tlmType == 'Rx':
-    mask = os.path.join(dirScript,r'2023_03_17_discrete_17700_21200_8_calibration_data_175-0081_sanmina_rel1c_2023_03_07_L1L14_48feed_calibration_13mm_dual_pol_probe_2.csv')
+    mask = os.path.join(dirScript,r'2023_10_31_discrete_17700_21200_8_calibration_data_175-0212_sanmina_rel1c_2023_09_01_v0_LensA_RX_default_cal_equ_sorted.csv')
 elif measType == 'Evaluation' and tlmType == 'Tx':
     mask = os.path.join(dirScript, r'2023_09_22_Sweep_FF_calibration_data_LensA_Sim_HFSS_ES2iXS_perf_eval_stackup_Cluster_freq_change_sorted_Edit.csv')
 elif measType == 'Evaluation' and tlmType == 'Rx':
     mask = os.path.join(dirScript, r'2023_10_31_discrete_17700_21200_8_calibration_data_175-0212_sanmina_rel1c_2023_perf_eval_sorted.csv')
 # definitions
 def find_measFiles(path, fileString, beam):
-    global measFiles, files
+    global measFiles, files, colours
     files = []
     for root, directories, file in os.walk(path):
         for file in file:
@@ -72,6 +74,12 @@ def find_measFiles(path, fileString, beam):
     for i in range(len(files)):
         if fileString in files[i] and 'eam' + str(beam) in files[i] and Exempt_Folder not in files[i]:
             measFiles.append(files[i])
+        if string1 in files[i]:
+            colours='blue'
+        elif string2 in files[i]:
+            colours='red'
+        else:
+            colours='grey'
 
 
 def import_mask(f_set, mask, offset):
@@ -130,7 +138,7 @@ def load_measFiles(filePath):
             meas_params[paramName] = meas_info[i][1]
 
 
-def plot__gainVport(f_set, measType):
+def plot__gainVport(f_set, measType, colours):
     global y, stat_TLM_median, loaded, y_gain
     fig.suptitle(measType + ': ' + str(f_set) + ' GHz, Beam ' + str(beam) + ', ' + str(temperature) + ' degC',
                  fontsize=25)
@@ -178,8 +186,8 @@ def plot__gainVport(f_set, measType):
         # plots
         dataSetLabel = meas_params['date time'] + '\n' + meas_params['lens type (rx/tx)'] + meas_params['barcodes'] + ', SW: ' + meas_params['acu_version'] + '\n ITCC: ' + meas_params['itcc_runner_version']
         # plot 1
-        minY = -30
-        maxY = 60
+        minY = 10
+        maxY = 40
         axs[0, 0].vlines(int(len(y) / 3), minY, maxY, 'k', alpha=0.2)
         axs[0, 0].vlines(2 * int(len(y) / 3), minY, maxY, 'k', alpha=0.2)
         axs[0, 0].text(0.8 * int(len(y) / 6), minY + 5, 'Lens 1', backgroundcolor='r', fontsize=20)
@@ -188,7 +196,7 @@ def plot__gainVport(f_set, measType):
         #colormap = plt.get_cmap('viridis')
         #colors = np.linspace(0, 1, len(y))
         #axs[0, 0].scatter(np.linspace(1, len(y), num=len(y)), y, c=colors, cmap=colormap, alpha=0.2)
-        axs[0, 0].plot(np.linspace(1, len(y), num=len(y)), y, 'k', alpha=0.2)
+        axs[0, 0].plot(np.linspace(1, len(y), num=len(y)), y, color=colours, alpha=0.2)
         axs[0, 0].set_xlabel('port')
         axs[0, 0].set_ylabel('S$_{21}$ [dB]')
         axs[0, 0].set_xticks([0.5 * int(len(y) / 3), 1 * int(len(y) / 3), 1.5 * int(len(y) / 3),  2 * int(len(y) / 3), 2.5 * int(len(y) / 3), 3 * int(len(y) / 3)])
@@ -238,7 +246,7 @@ def plot__gainVport(f_set, measType):
         axs[1, 0].text(0.8 * int(len(y) / 6), minY + 35, 'Lens 1', backgroundcolor='r', fontsize=20)
         axs[1, 0].text(2.8 * int(len(y) / 6), minY + 35, 'Lens 2', backgroundcolor='g', fontsize=20)
         axs[1, 0].text(4.8 * int(len(y) / 6), minY + 35, 'Lens 3', backgroundcolor='b', fontsize=20)
-        axs[1, 0].plot(np.linspace(1, len(y), num=len(y)), y, 'k', alpha=0.2)
+        axs[1, 0].plot(np.linspace(1, len(y), num=len(y)), y, color=colours, alpha=0.2)
         axs[1, 0].set_xlabel('port')
         axs[1, 0].set_ylabel('Phase [deg]')
         axs[1, 0].set_xlim([1, len(y) + 1])
@@ -272,6 +280,12 @@ for p in range(2):
             # load meas file
             if '_4' in measFiles[k]:  # if str(temperature) + 'C' in measFiles[k]:
                 load_measFiles(measFiles[k])
+                if string1 in measFiles[k]:
+                    colours = 'blue'
+                elif string2 in measFiles[k]:
+                    colours = 'red'
+                else:
+                    colours = 'grey'
                 print('-------------------------------------')
                 print(meas_params['date time'][1:])
                 print(meas_params['barcodes'])
@@ -280,7 +294,8 @@ for p in range(2):
 
                 # plot
                 if '.' in meas_params['acu_version']:
-                    plot__gainVport(f_set, measType)
+                    plot__gainVport(f_set, measType, colours)
+                    print(colours)
                     # colate
                     if loaded == True:
                         #stat_TLM_median_log.append(stat_TLM_median)
@@ -291,9 +306,9 @@ for p in range(2):
         import_mask(f_set, mask, offset)
         mask_lim = mask_lim_variable
         mask_offset = offset_mask#np.median(np.array(stat_TLM_median_log)) - np.median(np.array(mask_gain))
-        axs[0, 0].plot(np.linspace(1, len(mask_gain), num=len(mask_gain)), mask_gain + mask_offset, 'r-', alpha=0.5)
-        axs[0, 0].fill_between(np.linspace(1, len(mask_gain), num=len(mask_gain)), mask_gain + mask_offset - mask_lim,mask_gain + mask_offset + mask_lim, color='green', alpha=0.2)
-        axs[0, 0].plot(mask_gain - 20.0, 'r--')
+        #axs[0, 0].plot(np.linspace(1, len(mask_gain), num=len(mask_gain)), mask_gain + mask_offset, 'r-', alpha=0.5)
+        #axs[0, 0].fill_between(np.linspace(1, len(mask_gain), num=len(mask_gain)), mask_gain + mask_offset - mask_lim,mask_gain + mask_offset + mask_lim, color='green', alpha=0.2)
+        #axs[0, 0].plot(mask_gain - 20.0, 'r--')
 
 
         # mask_check
@@ -301,9 +316,9 @@ for p in range(2):
          delta = y_gain_log[jj] - (mask_gain + mask_offset)
          if max(abs(delta)) > mask_lim:
                 print(tlm_log[jj])
-                for i in range(len(delta)):
-                    if abs(delta[i]) > mask_lim:
-                        axs[0, 0].plot(i + 1, y_gain_log[jj][i], 'ro', markersize=1)
+                #for i in range(len(delta)):
+                    #if abs(delta[i]) > mask_lim:
+                        #axs[0, 0].plot(i + 1, y_gain_log[jj][i], 'ro', markersize=1)
                         #axs[0,0].gcf().gca().add_artist(plt.Circle(i+1, y_gain_log[jj][i], radius = 1, edgecolor='red', facecolor=0.5))
                         #axs[0, 0].text(i+1, y_gain_log[jj][i], str(tlm_log[jj]) + ': port ' + str(i+1), fontsize = 5)
 
